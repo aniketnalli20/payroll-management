@@ -1349,16 +1349,19 @@
   let currentLoginType = 'employer';
   let attemptCount = 0;
 
-  // Test credentials for validation
-  const validCredentials = {
-    employer: {
-      username: 'john.smith@techcorp.com',
-      password: 'TechCorp@2024'
-    },
-    employee: {
-      username: 'dev_alex_2024',
-      password: 'DevCode@123'
-    }
+  // Test credentials database - Enhanced with multiple users
+  const testCredentials = {
+    employer: [
+      { email: 'john.smith@techcorp.com', password: 'TechCorp@2024', name: 'John Smith', role: 'CEO', company: 'TechCorp Solutions' },
+      { email: 'sarah.johnson@innovate.biz', password: 'Innovation!123', name: 'Sarah Johnson', role: 'HR Manager', company: 'Innovate Business Solutions' },
+      { email: 'michael.chen@globaltech.net', password: 'Finance#2024', name: 'Michael Chen', role: 'Finance Director', company: 'GlobalTech Industries' }
+    ],
+    employee: [
+      { username: 'dev_alex_2024', password: 'DevCode@123', name: 'Alex Rodriguez', role: 'Senior Developer', department: 'Engineering' },
+      { username: 'marketing_lisa', password: 'Market!ng456', name: 'Lisa Williams', role: 'Marketing Specialist', department: 'Marketing' },
+      { username: 'sales_robert', password: 'Sales&Rep789', name: 'Robert Davis', role: 'Sales Representative', department: 'Sales' },
+      { username: 'hr_assistant_jane', password: 'HumanRes@2024', name: 'Jane Miller', role: 'HR Assistant', department: 'Human Resources' }
+    ]
   };
 
   // Open login modal when Login button is clicked
@@ -1409,12 +1412,9 @@
       currentLoginType = btn.dataset.type;
       updateLoginForm();
       // Reset warnings when switching
-      errorMessage.classList.remove('show');
-      attemptWarning.classList.remove('show');
+      hideAllMessages();
       attemptCount = 0;
-      loginSubmitBtn.disabled = false;
-      loginSubmitBtn.style.opacity = '1';
-      loginSubmitBtn.style.cursor = 'pointer';
+      resetLoginButton();
     });
   });
 
@@ -1472,78 +1472,90 @@
     }
   });
 
-  // Form submission with attempt tracking and credential validation
+  // Form submission with enhanced credential validation
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
-    // Hide all messages first
-    errorMessage.classList.remove('show');
-    attemptWarning.classList.remove('show');
-    successMessage.classList.remove('show');
-    
     // Basic form validation
     if (!loginField.value.trim() || !passwordField.value.trim()) {
-      errorMessage.querySelector('span:last-child').textContent = 'Please fill in all required fields.';
-      errorMessage.classList.add('show');
+      showError('Please fill in all required fields.');
       return;
     }
-
-    // Check if account is locked
-    if (attemptCount >= 5) {
-      errorMessage.querySelector('span:last-child').textContent = 'Account has been locked due to too many failed attempts. Please contact your system administrator.';
-      errorMessage.classList.add('show');
-      loginSubmitBtn.disabled = true;
-      loginSubmitBtn.style.opacity = '0.5';
-      loginSubmitBtn.style.cursor = 'not-allowed';
-      return;
+    
+    // Check credentials
+    const credentials = testCredentials[currentLoginType];
+    const loginValue = loginField.value.trim();
+    const passwordValue = passwordField.value.trim();
+    let user = null;
+    
+    if (currentLoginType === 'employer') {
+      user = credentials.find(cred => 
+        cred.email.toLowerCase() === loginValue.toLowerCase() && 
+        cred.password === passwordValue
+      );
+    } else {
+      user = credentials.find(cred => 
+        cred.username === loginValue && 
+        cred.password === passwordValue
+      );
     }
-
-    // Validate credentials
-    const credentials = validCredentials[currentLoginType];
-    const isValidLogin = loginField.value.trim() === credentials.username && 
-                        passwordField.value.trim() === credentials.password;
-
-    if (isValidLogin) {
+    
+    if (user) {
       // Successful login
-      successMessage.querySelector('span:last-child').textContent = `Welcome! Redirecting to ${currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex'} dashboard...`;
-      successMessage.classList.add('show');
-      
-      // Simulate redirect after 2 seconds
+      const platformName = currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex';
+      showSuccess(`Welcome back, ${user.name}! Redirecting to ${platformName}...`);
       setTimeout(() => {
-        alert(`Login successful! Welcome to ${currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex'} dashboard.`);
         closeLoginModal();
+        // Here you would redirect to the appropriate dashboard
+        console.log(`Successfully logged in as ${user.role} on ${platformName}`);
+        console.log('User details:', user);
+        alert(`Login successful! Welcome to ${platformName} dashboard, ${user.name}!`);
       }, 2000);
-      
-      // Reset attempt count on successful login
-      attemptCount = 0;
     } else {
       // Failed login
       attemptCount++;
-      
       if (attemptCount >= 2 && attemptCount < 5) {
         attemptWarning.classList.add('show');
       }
-      
       if (attemptCount >= 5) {
-        errorMessage.querySelector('span:last-child').textContent = 'Account has been locked due to too many failed attempts. Please contact your system administrator.';
-        errorMessage.classList.add('show');
-        loginSubmitBtn.disabled = true;
-        loginSubmitBtn.style.opacity = '0.5';
-        loginSubmitBtn.style.cursor = 'not-allowed';
-      } else {
-        errorMessage.querySelector('span:last-child').textContent = 'Invalid Username or Password. Too many failed attempts will lock your account.';
-        errorMessage.classList.add('show');
+        showError('Account has been locked due to too many failed attempts. Please contact your system administrator.');
+        disableLoginButton();
+        return;
       }
+      showError('Invalid credentials. Please check your login information and try again.');
     }
-    
-    console.log(`Login attempt for ${currentLoginType}:`, {
-      loginField: loginField.value,
-      password: '***hidden***',
-      loginType: currentLoginType,
-      success: isValidLogin,
-      attemptCount: attemptCount
-    });
   });
+
+  // Utility functions for enhanced login
+  function showError(message) {
+    hideAllMessages();
+    errorMessage.querySelector('span:last-child').textContent = message;
+    errorMessage.classList.add('show');
+  }
+
+  function showSuccess(message) {
+    hideAllMessages();
+    successMessage.querySelector('span:last-child').textContent = message;
+    successMessage.classList.add('show');
+  }
+
+  function hideAllMessages() {
+    errorMessage.classList.remove('show');
+    attemptWarning.classList.remove('show');
+    successMessage.classList.remove('show');
+  }
+
+  function disableLoginButton() {
+    loginSubmitBtn.disabled = true;
+    loginSubmitBtn.style.opacity = '0.5';
+    loginSubmitBtn.style.cursor = 'not-allowed';
+  }
+
+  function resetLoginButton() {
+    loginSubmitBtn.disabled = false;
+    loginSubmitBtn.style.opacity = '1';
+    loginSubmitBtn.style.cursor = 'pointer';
+  }
 
   // Initialize login form
   updateLoginForm();
