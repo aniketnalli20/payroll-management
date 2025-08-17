@@ -573,7 +573,112 @@
     100% { transform: translate(calc(var(--uib-size) * 0.5)) scale(0.73684); opacity: 0.65; }
   }
 
-  /* Login Loading State */
+  /* Main Screen Loading Overlay */
+  .main-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(248, 249, 251, 0.98);
+    backdrop-filter: blur(8px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    transition: all 0.4s ease;
+  }
+
+  .main-loading-overlay.show {
+    display: flex;
+  }
+
+  .main-loading-content {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 1.5rem;
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      0 8px 25px rgba(0, 0, 0, 0.08);
+    max-width: 400px;
+    width: 90vw;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .main-loading-message {
+    margin-top: 2rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+  }
+
+  .main-loading-submessage {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  .main-loading-progress {
+    margin-top: 2rem;
+    width: 280px;
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .main-loading-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.4s ease;
+    animation: progressPulse 2s ease-in-out infinite;
+    position: relative;
+  }
+
+  .main-loading-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 0 3px 3px 0;
+    animation: progressShine 2s ease-in-out infinite;
+  }
+
+  @keyframes progressShine {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+
+  /* Responsive adjustments for main loader */
+  @media (max-width: 768px) {
+    .main-loading-content {
+      padding: 2rem;
+      max-width: 95vw;
+    }
+    
+    .main-loading-message {
+      font-size: 1.1rem;
+    }
+    
+    .main-loading-progress {
+      width: 240px;
+    }
+  }
+
+  /* Login Loading State (Simplified for modal) */
   .login-loading-overlay {
     position: absolute;
     top: 0;
@@ -671,6 +776,235 @@
     border-radius: 6px;
     border: 1px solid #e9ecef;
     transition: all 0.3s ease;
+  }
+
+  /* Tools Button and Panel Styles */
+  .tools-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 1500;
+    user-select: none;
+  }
+
+  .tools-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    box-shadow: 0 12px 35px rgba(0, 123, 255, 0.4);
+    transform: translateY(-2px) scale(1.05);
+  }
+
+  .tools-panel {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 420px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+    z-index: 1600;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .tools-panel.show {
+    right: 0;
+  }
+
+  .tools-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    background: rgba(248, 249, 251, 0.8);
+    backdrop-filter: blur(5px);
+  }
+
+  .tools-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111;
+  }
+
+  .tools-close {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #666;
+  }
+
+  .tools-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #111;
+    transform: scale(1.1);
+  }
+
+  .tools-content {
+    padding: 1.5rem;
+  }
+
+  .tools-section {
+    margin-bottom: 2rem;
+  }
+
+  .tools-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .tools-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  /* Credentials Grid */
+  .cred-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cred-card {
+    background: rgba(248, 249, 251, 0.8);
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .cred-card:hover {
+    background: rgba(240, 242, 245, 0.9);
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+  }
+
+  .cred-card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #007bff;
+    margin-bottom: 0.8rem;
+    text-align: center;
+  }
+
+  .cred-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .cred-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .cred-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+  }
+
+  .cred-value {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #111;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+  }
+
+  .cred-value:hover {
+    background: #007bff;
+    color: white;
+    border-color: #0056b3;
+    transform: scale(1.05);
+  }
+
+  /* Loader Test Buttons Grid */
+  .loader-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  .loader-test-btn {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #495057;
+  }
+
+  .loader-test-btn:hover {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+  }
+
+  .loader-test-btn .material-icons {
+    font-size: 1.5rem;
+  }
+
+  /* Responsive adjustments for tools panel */
+  @media (max-width: 768px) {
+    .tools-panel {
+      width: 100vw;
+      right: -100vw;
+    }
+    
+    .tools-btn {
+      bottom: 1rem;
+      right: 1rem;
+      padding: 0.8rem 1.2rem;
+      font-size: 0.9rem;
+    }
+    
+    .loader-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* Login Form Modal Styles */
@@ -1209,39 +1543,112 @@
   </form>
 </div>
 
-<!-- Test Credentials Display -->
-<div class="test-credentials" id="testCredentials">
-  <h4>Test Credentials</h4>
-  <div class="cred-section">
-    <div class="cred-title">Employer (OrbiWave):</div>
-    <div>john.smith@techcorp.com</div>
-    <div>TechCorp@2024</div>
+<!-- Tools Button -->
+<button class="tools-btn" id="toolsBtn" onclick="toggleToolsPanel()">
+  <span class="material-icons">build</span>
+  Tools
+</button>
+
+<!-- Tools Panel -->
+<div class="tools-panel" id="toolsPanel">
+  <div class="tools-header">
+    <div class="tools-title">
+      <span class="material-icons">build</span>
+      Developer Tools
+    </div>
+    <button class="tools-close" onclick="toggleToolsPanel()">
+      <span class="material-icons">close</span>
+    </button>
   </div>
-  <div class="cred-section">
-    <div class="cred-title">Employee (OrbiFlex):</div>
-    <div>dev_alex_2024</div>
-    <div>DevCode@123</div>
+  
+  <div class="tools-content">
+    <!-- Test Credentials Section -->
+    <div class="tools-section">
+      <div class="tools-section-title">
+        <span class="material-icons">key</span>
+        Test Credentials
+      </div>
+      <div class="cred-grid">
+        <div class="cred-card">
+          <div class="cred-card-title">Employer (OrbiWave)</div>
+          <div class="cred-item">
+            <span class="cred-label">Email:</span>
+            <span class="cred-value" onclick="copyToClipboard('john.smith@techcorp.com')">john.smith@techcorp.com</span>
+          </div>
+          <div class="cred-item">
+            <span class="cred-label">Password:</span>
+            <span class="cred-value" onclick="copyToClipboard('TechCorp@2024')">TechCorp@2024</span>
+          </div>
+        </div>
+        <div class="cred-card">
+          <div class="cred-card-title">Employee (OrbiFlex)</div>
+          <div class="cred-item">
+            <span class="cred-label">Username:</span>
+            <span class="cred-value" onclick="copyToClipboard('dev_alex_2024')">dev_alex_2024</span>
+          </div>
+          <div class="cred-item">
+            <span class="cred-label">Password:</span>
+            <span class="cred-value" onclick="copyToClipboard('DevCode@123')">DevCode@123</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loader Animations Section -->
+    <div class="tools-section">
+      <div class="tools-section-title">
+        <span class="material-icons">animation</span>
+        Test Loader Animations
+      </div>
+      <div class="loader-grid">
+        <button class="loader-test-btn" onclick="testLoader('employerLogin')">
+          <span class="material-icons">business</span>
+          <span>Employer Login</span>
+        </button>
+        <button class="loader-test-btn" onclick="testLoader('employeeLogin')">
+          <span class="material-icons">person</span>
+          <span>Employee Login</span>
+        </button>
+        <button class="loader-test-btn" onclick="testLoader('failedLogin')">
+          <span class="material-icons">error</span>
+          <span>Failed Login</span>
+        </button>
+        <button class="loader-test-btn" onclick="testLoader('formSubmission')">
+          <span class="material-icons">send</span>
+          <span>Form Submit</span>
+        </button>
+        <button class="loader-test-btn" onclick="testLoader('passwordReset')">
+          <span class="material-icons">lock_reset</span>
+          <span>Password Reset</span>
+        </button>
+        <button class="loader-test-btn" onclick="testLoader('registration')">
+          <span class="material-icons">person_add</span>
+          <span>Registration</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Screen Loading Overlay -->
+<div class="main-loading-overlay" id="mainLoadingOverlay">
+  <div class="main-loading-content">
+    <div class="chaotic-orbit" id="mainChaticOrbit"></div>
+    <div class="main-loading-message" id="mainLoadingMessage">
+      Loading...
+    </div>
+    <div class="main-loading-submessage" id="mainLoadingSubmessage">
+      Please wait
+    </div>
+    <div class="main-loading-progress">
+      <div class="main-loading-progress-bar" id="mainLoadingProgressBar"></div>
+    </div>
   </div>
 </div>
 
 <!-- Login Form Modal -->
 <div class="login-backdrop" id="loginBackdrop">
   <div class="login-card">
-    <!-- Loading Overlay -->
-    <div class="login-loading-overlay" id="loginLoadingOverlay">
-      <div class="login-loading-content">
-        <div class="chaotic-orbit"></div>
-        <div class="login-loading-message" id="loginLoadingMessage">
-          Authenticating your credentials...
-        </div>
-        <div class="login-loading-submessage" id="loginLoadingSubmessage">
-          Please wait while we verify your access
-        </div>
-        <div class="login-loading-progress">
-          <div class="login-loading-progress-bar" id="loginLoadingProgressBar"></div>
-        </div>
-      </div>
-    </div>
     <button class="login-close-btn" type="button" aria-label="Close" id="loginCloseBtn">
       <span class="material-icons">close</span>
     </button>
@@ -1799,8 +2206,8 @@
     // Get messages for this process type
     const messages = customMessages || loaderConfig.messages[processType] || loaderConfig.messages.formSubmission;
     
-    // Show loading state
-    showLoginLoader('authenticating');
+    // Show main screen loading state
+    showMainLoader('authenticating');
     
     // Run enhanced message sequence
     runEnhancedMessageSequence(messages, callback);
@@ -1814,10 +2221,13 @@
       if (messageIndex < messages.length) {
         const { message, submessage, duration, color } = messages[messageIndex];
         
-        // Update loader messages and color
-        loginLoadingMessage.textContent = message;
-        loginLoadingSubmessage.textContent = submessage;
+        // Update main loader messages and color
+        mainLoadingMessage.textContent = message;
+        mainLoadingSubmessage.textContent = submessage;
         document.documentElement.style.setProperty('--uib-color', color);
+        
+        // Update progress bar
+        mainLoadingProgressBar.style.width = `${((messageIndex + 1) / messages.length) * 100}%`;
         
         messageIndex++;
         
@@ -1827,7 +2237,7 @@
         // All messages complete
         if (loaderConfig.conditions.AUTO_HIDE) {
           setTimeout(() => {
-            hideLoginLoader();
+            hideMainLoader();
             if (callback) callback();
           }, 500);
         }
@@ -1871,6 +2281,112 @@
     
     showEnhancedLoader(processType, null, additionalData.callback);
   }
+
+  // Test function for demo buttons
+  function testLoader(processType) {
+    console.log(`🎨 Testing loader: ${processType}`);
+    showEnhancedLoader(processType, null, () => {
+      console.log(`✅ ${processType} loader test completed`);
+      // Show a brief success message
+      setTimeout(() => {
+        alert(`✅ ${processType} animation completed!\n\nCheck the console for detailed logs.`);
+      }, 100);
+    });
+  }
+
+  // Enhanced main screen loader with better UX
+  function showMainScreenLoader(title, subtitle, color = '#007bff') {
+    mainLoadingMessage.textContent = title;
+    mainLoadingSubmessage.textContent = subtitle;
+    document.documentElement.style.setProperty('--uib-color', color);
+    mainLoadingOverlay.classList.add('show');
+    
+    // Animate progress bar
+    mainLoadingProgressBar.style.width = '0%';
+    setTimeout(() => {
+      mainLoadingProgressBar.style.width = '100%';
+    }, 200);
+  }
+
+  function hideMainScreenLoader() {
+    mainLoadingOverlay.classList.remove('show');
+    mainLoadingProgressBar.style.width = '0%';
+  }
+
+  // Tools Panel Functions
+  function toggleToolsPanel() {
+    const toolsPanel = document.getElementById('toolsPanel');
+    toolsPanel.classList.toggle('show');
+    
+    // Log panel state
+    const isOpen = toolsPanel.classList.contains('show');
+    console.log(`🔧 Tools panel ${isOpen ? 'opened' : 'closed'}`);
+    
+    // Update button text based on state
+    const toolsBtn = document.getElementById('toolsBtn');
+    const icon = toolsBtn.querySelector('.material-icons');
+    const text = toolsBtn.childNodes[2]; // Text node after icon and space
+    
+    if (isOpen) {
+      icon.textContent = 'close';
+      text.textContent = 'Close';
+    } else {
+      icon.textContent = 'build';
+      text.textContent = 'Tools';
+    }
+  }
+
+  // Copy to clipboard function
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      console.log(`📋 Copied to clipboard: ${text}`);
+      
+      // Show temporary feedback
+      const originalText = event.target.textContent;
+      event.target.textContent = 'Copied!';
+      event.target.style.background = '#28a745';
+      event.target.style.color = 'white';
+      
+      setTimeout(() => {
+        event.target.textContent = originalText;
+        event.target.style.background = '';
+        event.target.style.color = '';
+      }, 1000);
+      
+    }).catch(err => {
+      console.error('❌ Failed to copy to clipboard:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      // Show feedback
+      alert(`📋 Copied: ${text}`);
+    });
+  }
+
+  // Close tools panel when clicking outside
+  document.addEventListener('click', (e) => {
+    const toolsPanel = document.getElementById('toolsPanel');
+    const toolsBtn = document.getElementById('toolsBtn');
+    
+    if (toolsPanel.classList.contains('show') && 
+        !toolsPanel.contains(e.target) && 
+        !toolsBtn.contains(e.target)) {
+      toggleToolsPanel();
+    }
+  });
+
+  // Keyboard shortcut to toggle tools panel (Ctrl/Cmd + T)
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+      e.preventDefault();
+      toggleToolsPanel();
+    }
+  });
 
   // Console Commands for Database Access (for development/testing)
   window.OrbisDB = {
@@ -2092,14 +2608,14 @@
     }
   });
 
-  // Login Loading Animation Controller
-  const loginLoadingOverlay = document.getElementById('loginLoadingOverlay');
-  const loginLoadingMessage = document.getElementById('loginLoadingMessage');
-  const loginLoadingSubmessage = document.getElementById('loginLoadingSubmessage');
-  const loginLoadingProgressBar = document.getElementById('loginLoadingProgressBar');
+  // Main Screen Loading Animation Controller
+  const mainLoadingOverlay = document.getElementById('mainLoadingOverlay');
+  const mainLoadingMessage = document.getElementById('mainLoadingMessage');
+  const mainLoadingSubmessage = document.getElementById('mainLoadingSubmessage');
+  const mainLoadingProgressBar = document.getElementById('mainLoadingProgressBar');
 
-  function showLoginLoader(type = 'authenticating') {
-    loginLoadingOverlay.classList.add('show');
+  function showMainLoader(type = 'authenticating') {
+    mainLoadingOverlay.classList.add('show');
     
     const messages = {
       authenticating: {
@@ -2130,22 +2646,31 @@
     };
     
     const config = messages[type] || messages.authenticating;
-    loginLoadingMessage.textContent = config.message;
-    loginLoadingSubmessage.textContent = config.submessage;
+    mainLoadingMessage.textContent = config.message;
+    mainLoadingSubmessage.textContent = config.submessage;
     
     // Update loader color
     document.documentElement.style.setProperty('--uib-color', config.color);
     
     // Animate progress bar
-    loginLoadingProgressBar.style.width = '0%';
+    mainLoadingProgressBar.style.width = '0%';
     setTimeout(() => {
-      loginLoadingProgressBar.style.width = '100%';
+      mainLoadingProgressBar.style.width = '100%';
     }, 100);
   }
 
+  function hideMainLoader() {
+    mainLoadingOverlay.classList.remove('show');
+    mainLoadingProgressBar.style.width = '0%';
+  }
+
+  // Legacy function for backward compatibility
+  function showLoginLoader(type) {
+    showMainLoader(type);
+  }
+
   function hideLoginLoader() {
-    loginLoadingOverlay.classList.remove('show');
-    loginLoadingProgressBar.style.width = '0%';
+    hideMainLoader();
   }
 
   // Enhanced form submission with conditional loading states
@@ -2195,7 +2720,10 @@
     console.log('👤 Found user:', user);
     
     if (user) {
-      // Successful login - Use enhanced loader
+      // Close login modal first
+      closeLoginModal();
+      
+      // Successful login - Use enhanced main screen loader
       showConditionalLoader(currentLoginType, 'login', {
         callback: () => {
           // Record successful login
@@ -2205,21 +2733,19 @@
           // Reset attempt count
           attemptCount = 0;
           
-          // Show success message
-          showSuccess(`Welcome back, ${user.name}! Redirecting to ${platformName}...`);
+          DatabaseManager.log('security', `Successful login for ${user.name} (${user.role})`, {
+            loginId: loginId,
+            userId: user.id,
+            platform: platformName
+          });
           
+          console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
+          console.log('👤 User details:', user);
+          
+          // Show success message after loader completes
           setTimeout(() => {
-            closeLoginModal();
-            DatabaseManager.log('security', `Successful login for ${user.name} (${user.role})`, {
-              loginId: loginId,
-              userId: user.id,
-              platform: platformName
-            });
-            
-            console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
-            console.log('👤 User details:', user);
             alert(`🎉 Login successful! Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}`);
-          }, 2000);
+          }, 500);
         }
       });
       
