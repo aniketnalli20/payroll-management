@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Orbisyn Navbar Enhanced</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <style>
   *, *::before, *::after { box-sizing: border-box; }
   body {
@@ -128,26 +129,29 @@
     text-decoration: none;
   }
 
-  /* Login button style */
+  /* Login button style - matching get-started-btn */
   .login-btn {
-    background: transparent;
-    color: #000;
-    border: 2px solid transparent;
-    padding: 0.5rem 1.4rem;
-    border-radius: 7px;
-    font-weight: 600;
+    background: #000;
+    color: white;
+    padding: 0.55rem 2.2rem;
+    border-radius: 24px;
+    font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.15s ease-in-out;
     margin-left: 0.4rem;
     white-space: nowrap;
   }
   .login-btn:hover,
   .login-btn:focus-visible {
-    background: #000;
-    color: white;
-    border-color: #000;
-    outline: none;
+    background: #222;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    transform: scale(1.05);
+    outline-offset: 3px;
+    outline: 2px solid #666;
+    text-decoration: none;
   }
 
   /* Mega dropdown style */
@@ -544,13 +548,15 @@
     background: rgba(0,0,0,0.05);
     border: none;
     color: #666;
-    width: 1.6rem; height: 1.6rem;
+    width: 1.8rem; height: 1.8rem;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     transition: background 0.17s, color 0.17s;
     z-index: 2;
-    font-size: 1rem;
+  }
+  .login-close-btn .material-icons {
+    font-size: 1.1rem !important;
   }
   .login-close-btn:hover, .login-close-btn:focus-visible {
     background: #e9ecef;
@@ -616,7 +622,10 @@
     margin-bottom: 0.2rem;
     display: flex;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.3rem;
+  }
+  .security-warning .material-icons {
+    font-size: 1rem !important;
   }
   .security-warning ul {
     margin: 0.3rem 0 0 0.8rem;
@@ -675,9 +684,11 @@
     color: #666;
     cursor: pointer;
     transition: color 0.2s;
-    padding: 3px;
-    border-radius: 3px;
-    font-size: 0.9rem;
+    padding: 4px;
+    border-radius: 4px;
+  }
+  .password-toggle .material-icons {
+    font-size: 1.1rem !important;
   }
   .password-toggle:hover {
     color: #000;
@@ -699,30 +710,36 @@
     color: #333;
     display: flex;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.3rem;
+  }
+  .password-guidelines .material-icons {
+    font-size: 1rem !important;
   }
   .login-submit-btn {
     width: 100%;
-    background: linear-gradient(90deg, #000 0%, #333 100%);
+    background: #000;
     color: #fff;
-    padding: 0.8rem;
+    padding: 1rem 1.5rem;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 1.05rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 24px;
     cursor: pointer;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     margin-bottom: 0.8rem;
-    transition: background 0.19s, box-shadow 0.19s, transform 0.15s;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.15s ease-in-out;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
+  }
+  .login-submit-btn .material-icons {
+    font-size: 1.2rem !important;
   }
   .login-submit-btn:hover:not(:disabled), .login-submit-btn:focus-visible:not(:disabled) {
-    background: linear-gradient(90deg, #111 10%, #000 90%);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    transform: translateY(-1px);
+    background: #222;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    transform: scale(1.02);
     outline: none;
   }
   .login-submit-btn:disabled {
@@ -737,6 +754,9 @@
     display: none;
     align-items: center;
     gap: 0.4rem;
+  }
+  .error-message .material-icons, .attempt-warning .material-icons {
+    font-size: 1rem !important;
   }
   .error-message {
     background: #fff5f5;
@@ -765,12 +785,15 @@
   .login-link {
     color: #000;
     text-decoration: none;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 500;
     transition: color 0.2s;
     display: flex;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.3rem;
+  }
+  .login-link .material-icons {
+    font-size: 1rem !important;
   }
   .login-link:hover {
     color: #333;
@@ -778,19 +801,27 @@
   }
   .register-section {
     text-align: center;
-    padding-top: 0.8rem;
+    padding: 1.2rem 0.5rem 0.5rem 0.5rem;
     border-top: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
   .register-text {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: #666;
-    margin-bottom: 0.3rem;
+    font-weight: 600;
+    margin: 0;
   }
   .register-description {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: #888;
-    line-height: 1.3;
-    margin-bottom: 0.6rem;
+    line-height: 1.4;
+    margin: 0;
+    max-width: 280px;
+    text-align: center;
   }
   /* Terms Notice */
   .terms-notice {
@@ -800,9 +831,13 @@
     margin-top: 0.8rem;
     line-height: 1.2;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    gap: 0.2rem;
+    gap: 0.3rem;
+  }
+  .terms-notice .material-icons {
+    font-size: 0.8rem !important;
+    margin-top: 0.1rem;
   }
   @media (max-width: 560px) {
     .login-card {
@@ -984,7 +1019,9 @@
 <!-- Login Form Modal -->
 <div class="login-backdrop" id="loginBackdrop">
   <div class="login-card">
-    <button class="login-close-btn" type="button" aria-label="Close" id="loginCloseBtn">×</button>
+    <button class="login-close-btn" type="button" aria-label="Close" id="loginCloseBtn">
+      <span class="material-icons">close</span>
+    </button>
     <div class="brand-logo">
       <h1>Orbisyn</h1>
     </div>
@@ -995,7 +1032,8 @@
     <h2 class="login-title" id="loginTitle">Please sign in</h2>
     <div class="security-warning">
       <div class="warning-title">
-        🔒 Security Guidelines
+        <span class="material-icons">lock</span>
+        Security Guidelines
       </div>
       <ul id="securityGuidelines">
         <li>Use your official company email address</li>
@@ -1005,11 +1043,11 @@
       </ul>
     </div>
     <div class="error-message" id="errorMessage">
-      <span>⚠️</span>
+      <span class="material-icons">error</span>
       <span>Invalid Username or Password. Too many failed attempts will lock your account.</span>
     </div>
     <div class="attempt-warning" id="attemptWarning">
-      <span>⚠️</span>
+      <span class="material-icons">warning</span>
       <span>Account will be locked after 3 more failed attempts. Contact your system administrator if you need assistance.</span>
     </div>
     <form id="loginForm">
@@ -1021,30 +1059,33 @@
         <div class="login-input-group">
           <label for="loginPassword" class="login-label">Password</label>
           <input type="password" id="loginPassword" name="password" class="login-input" required />
-          <button type="button" class="password-toggle" id="passwordToggle">👁️</button>
+          <button type="button" class="password-toggle" id="passwordToggle">
+            <span class="material-icons">visibility</span>
+          </button>
         </div>
       </div>
       <div class="password-guidelines" id="passwordGuidelines">
         <div class="guideline-title">
-          ℹ️ Password Requirements:
+          <span class="material-icons">info</span>
+          Password Requirements:
         </div>
         <div id="passwordRequirements">
           Minimum 8 characters, including uppercase, lowercase, number and special character.
         </div>
       </div>
       <button type="submit" class="login-submit-btn" id="loginSubmitBtn">
-        <span>🔐</span>
+        <span class="material-icons">login</span>
         <span id="loginBtnText">Sign in to OrbiWave</span>
       </button>
     </form>
     <div class="form-links">
       <div class="forgot-links" id="forgotLinks">
         <a href="#" class="login-link" id="forgotUsername">
-          <span>👤</span>
+          <span class="material-icons">person</span>
           Forgot username
         </a>
         <a href="#" class="login-link" id="forgotPassword">
-          <span>🔑</span>
+          <span class="material-icons">key</span>
           Forgot password
         </a>
       </div>
@@ -1055,12 +1096,12 @@
         If the business you work for is a client of Orbisyn, please click the link below to register.
       </div>
       <a href="#" class="login-link" id="registerLink">
-        <span>➕</span>
+        <span class="material-icons">person_add</span>
         <span>Register Now</span>
       </a>
     </div>
     <div class="terms-notice">
-      <span>⚖️</span>
+      <span class="material-icons">gavel</span>
       By signing in, you agree to our Terms of Service and Privacy Policy. This system is for authorized users only. All activity is monitored and logged.
     </div>
   </div>
@@ -1282,7 +1323,7 @@
     loginSubmitBtn.style.opacity = '1';
     loginSubmitBtn.style.cursor = 'pointer';
     passwordField.type = 'password';
-    passwordToggle.textContent = '👁️';
+    passwordToggle.querySelector('.material-icons').textContent = 'visibility';
   }
 
   loginCloseBtn.addEventListener('click', closeLoginModal);
@@ -1329,7 +1370,7 @@
       forgotUsername.style.display = 'none';
       registerText.textContent = 'Not Registered Yet?';
       registerDescription.textContent = 'If the business you work for is a client of Orbisyn, please click the link below to register.';
-      registerLink.innerHTML = '<span>➕</span><span>Register Now</span>';
+      registerLink.innerHTML = '<span class="material-icons">person_add</span><span>Register Now</span>';
       passwordRequirements.textContent = 'Minimum 8 characters, including uppercase, lowercase, number and special character.';
     } else {
       loginTitle.textContent = 'Employee Login';
@@ -1348,19 +1389,20 @@
       forgotUsername.style.display = 'flex';
       registerText.textContent = 'New to Orbisyn Flex?';
       registerDescription.textContent = 'Contact your HR department for account setup assistance.';
-      registerLink.innerHTML = '<span>➕</span><span>Sign up</span>';
+      registerLink.innerHTML = '<span class="material-icons">person_add</span><span>Sign up</span>';
       passwordRequirements.textContent = 'Must meet company password policy requirements. Contact IT support for assistance.';
     }
   }
 
   // Password toggle functionality
   passwordToggle.addEventListener('click', () => {
+    const icon = passwordToggle.querySelector('.material-icons');
     if (passwordField.type === 'password') {
       passwordField.type = 'text';
-      passwordToggle.textContent = '🙈';
+      icon.textContent = 'visibility_off';
     } else {
       passwordField.type = 'password';
-      passwordToggle.textContent = '👁️';
+      icon.textContent = 'visibility';
     }
   });
 
