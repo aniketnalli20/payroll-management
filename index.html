@@ -1306,14 +1306,40 @@
   formCompanyNameInput.addEventListener('input', updateFormProgress);
   formNumEmployeesInput.addEventListener('input', updateFormProgress);
 
-  // Move to step 2
+  // Move to step 2 and record form submission
   formNextBtn.addEventListener('click', () => {
     if (formNextBtn.disabled) return;
+    
+    // Record form submission in database
+    const formData = {
+      companyName: formCompanyNameInput.value.trim(),
+      numEmployees: parseInt(formNumEmployeesInput.value.trim()),
+      submissionSource: 'get-started-form',
+      step: 'company-info'
+    };
+    
+    const submissionId = DatabaseManager.recordSubmission('getStarted', formData);
+    DatabaseManager.log('formSubmissions', 'Get Started form submitted', {
+      submissionId: submissionId,
+      companyName: formData.companyName,
+      numEmployees: formData.numEmployees
+    });
+    
+    console.log('📝 Get Started form submitted:', formData);
+    console.log('🆔 Submission ID:', submissionId);
+    
+    // Move to step 2
     formStep1.classList.remove('active');
     formStep2.classList.add('active');
     formProgressBarFill.style.width = '100%';
     formProgressSteps[0].classList.remove('active');
     formProgressSteps[1].classList.add('active');
+    
+    // Auto-close after 3 seconds
+    setTimeout(() => {
+      closeFormModal();
+      alert(`✅ Thank you ${formData.companyName}! Your information has been recorded.\n\n📊 Company: ${formData.companyName}\n👥 Employees: ${formData.numEmployees}\n🆔 Reference: ${submissionId.slice(-8)}\n\nA representative will contact you shortly!`);
+    }, 3000);
   });
 
   // Initialize form progress
@@ -1349,20 +1375,269 @@
   let currentLoginType = 'employer';
   let attemptCount = 0;
 
-  // Test credentials database - Enhanced with multiple users
-  const testCredentials = {
-    employer: [
-      { email: 'john.smith@techcorp.com', password: 'TechCorp@2024', name: 'John Smith', role: 'CEO', company: 'TechCorp Solutions' },
-      { email: 'sarah.johnson@innovate.biz', password: 'Innovation!123', name: 'Sarah Johnson', role: 'HR Manager', company: 'Innovate Business Solutions' },
-      { email: 'michael.chen@globaltech.net', password: 'Finance#2024', name: 'Michael Chen', role: 'Finance Director', company: 'GlobalTech Industries' }
-    ],
-    employee: [
-      { username: 'dev_alex_2024', password: 'DevCode@123', name: 'Alex Rodriguez', role: 'Senior Developer', department: 'Engineering' },
-      { username: 'marketing_lisa', password: 'Market!ng456', name: 'Lisa Williams', role: 'Marketing Specialist', department: 'Marketing' },
-      { username: 'sales_robert', password: 'Sales&Rep789', name: 'Robert Davis', role: 'Sales Representative', department: 'Sales' },
-      { username: 'hr_assistant_jane', password: 'HumanRes@2024', name: 'Jane Miller', role: 'HR Assistant', department: 'Human Resources' }
-    ]
+  // Comprehensive Database System for Form Recording
+  const orbisyn_database = {
+    // User Authentication Database
+    users: {
+      employer: [
+        { id: 'emp_001', email: 'john.smith@techcorp.com', password: 'TechCorp@2024', name: 'John Smith', role: 'CEO', company: 'TechCorp Solutions', status: 'active', lastLogin: null },
+        { id: 'emp_002', email: 'sarah.johnson@innovate.biz', password: 'Innovation!123', name: 'Sarah Johnson', role: 'HR Manager', company: 'Innovate Business Solutions', status: 'active', lastLogin: null },
+        { id: 'emp_003', email: 'michael.chen@globaltech.net', password: 'Finance#2024', name: 'Michael Chen', role: 'Finance Director', company: 'GlobalTech Industries', status: 'active', lastLogin: null }
+      ],
+      employee: [
+        { id: 'emp_101', username: 'dev_alex_2024', password: 'DevCode@123', name: 'Alex Rodriguez', role: 'Senior Developer', department: 'Engineering', employeeId: 'ENG001', status: 'active', lastLogin: null },
+        { id: 'emp_102', username: 'marketing_lisa', password: 'Market!ng456', name: 'Lisa Williams', role: 'Marketing Specialist', department: 'Marketing', employeeId: 'MKT001', status: 'active', lastLogin: null },
+        { id: 'emp_103', username: 'sales_robert', password: 'Sales&Rep789', name: 'Robert Davis', role: 'Sales Representative', department: 'Sales', employeeId: 'SAL001', status: 'active', lastLogin: null },
+        { id: 'emp_104', username: 'hr_assistant_jane', password: 'HumanRes@2024', name: 'Jane Miller', role: 'HR Assistant', department: 'Human Resources', employeeId: 'HR001', status: 'active', lastLogin: null }
+      ]
+    },
+    
+    // Form Submissions Database
+    submissions: {
+      getStarted: [],
+      contactUs: [],
+      newsletter: [],
+      loginAttempts: [],
+      registrations: []
+    },
+    
+    // System Logs
+    logs: {
+      loginAttempts: [],
+      formSubmissions: [],
+      errors: [],
+      security: []
+    }
   };
+
+  // Database Helper Functions
+  const DatabaseManager = {
+    // Save data to localStorage
+    save: function() {
+      try {
+        localStorage.setItem('orbisyn_database', JSON.stringify(orbisyn_database));
+        console.log('✅ Database saved successfully');
+      } catch (error) {
+        console.error('❌ Failed to save database:', error);
+      }
+    },
+    
+    // Load data from localStorage
+    load: function() {
+      try {
+        const saved = localStorage.getItem('orbisyn_database');
+        if (saved) {
+          const loadedData = JSON.parse(saved);
+          // Merge with default structure to ensure all properties exist
+          Object.assign(orbisyn_database, loadedData);
+          console.log('✅ Database loaded successfully');
+        }
+      } catch (error) {
+        console.error('❌ Failed to load database:', error);
+      }
+    },
+    
+    // Record form submission
+    recordSubmission: function(formType, data) {
+      const submission = {
+        id: 'sub_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        timestamp: new Date().toISOString(),
+        formType: formType,
+        data: data,
+        userAgent: navigator.userAgent,
+        url: window.location.href
+      };
+      
+      orbisyn_database.submissions[formType].push(submission);
+      this.log('formSubmissions', `Form submitted: ${formType}`, submission);
+      this.save();
+      return submission.id;
+    },
+    
+    // Record login attempt
+    recordLoginAttempt: function(loginType, identifier, success, userInfo = null) {
+      const attempt = {
+        id: 'login_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        timestamp: new Date().toISOString(),
+        loginType: loginType,
+        identifier: identifier,
+        success: success,
+        userInfo: userInfo,
+        ip: 'localhost', // In real app, get actual IP
+        userAgent: navigator.userAgent
+      };
+      
+      orbisyn_database.logs.loginAttempts.push(attempt);
+      if (success && userInfo) {
+        // Update user's last login
+        const users = orbisyn_database.users[loginType];
+        const user = users.find(u => 
+          loginType === 'employer' ? u.email === identifier : u.username === identifier
+        );
+        if (user) {
+          user.lastLogin = new Date().toISOString();
+        }
+      }
+      this.save();
+      return attempt.id;
+    },
+    
+    // Log system events
+    log: function(category, message, data = null) {
+      const logEntry = {
+        id: 'log_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        timestamp: new Date().toISOString(),
+        category: category,
+        message: message,
+        data: data
+      };
+      
+      orbisyn_database.logs[category].push(logEntry);
+      console.log(`📝 [${category.toUpperCase()}] ${message}`, data);
+    },
+    
+    // Get all submissions by type
+    getSubmissions: function(formType) {
+      return orbisyn_database.submissions[formType] || [];
+    },
+    
+    // Get user statistics
+    getStats: function() {
+      return {
+        totalUsers: orbisyn_database.users.employer.length + orbisyn_database.users.employee.length,
+        totalSubmissions: Object.values(orbisyn_database.submissions).reduce((sum, arr) => sum + arr.length, 0),
+        totalLoginAttempts: orbisyn_database.logs.loginAttempts.length,
+        successfulLogins: orbisyn_database.logs.loginAttempts.filter(a => a.success).length
+      };
+    },
+    
+    // Export all data
+    exportData: function() {
+      const dataStr = JSON.stringify(orbisyn_database, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `orbisyn_database_${new Date().toISOString().split('T')[0]}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  // Initialize database
+  DatabaseManager.load();
+
+  // Console Commands for Database Access (for development/testing)
+  window.OrbisDB = {
+    // View all data
+    viewAll: () => {
+      console.log('🗄️ Complete Orbisyn Database:', orbisyn_database);
+      return orbisyn_database;
+    },
+    
+    // View specific data types
+    viewUsers: () => {
+      console.log('👥 All Users:', orbisyn_database.users);
+      return orbisyn_database.users;
+    },
+    
+    viewSubmissions: (type = null) => {
+      if (type) {
+        console.log(`📝 ${type} Submissions:`, orbisyn_database.submissions[type]);
+        return orbisyn_database.submissions[type];
+      }
+      console.log('📝 All Submissions:', orbisyn_database.submissions);
+      return orbisyn_database.submissions;
+    },
+    
+    viewLogs: (category = null) => {
+      if (category) {
+        console.log(`📋 ${category} Logs:`, orbisyn_database.logs[category]);
+        return orbisyn_database.logs[category];
+      }
+      console.log('📋 All Logs:', orbisyn_database.logs);
+      return orbisyn_database.logs;
+    },
+    
+    // Get statistics
+    stats: () => {
+      const stats = DatabaseManager.getStats();
+      console.log('📊 Database Statistics:', stats);
+      return stats;
+    },
+    
+    // Export data
+    export: () => {
+      DatabaseManager.exportData();
+      console.log('💾 Database exported to file');
+    },
+    
+    // Clear specific data (for testing)
+    clearSubmissions: (type = null) => {
+      if (type && orbisyn_database.submissions[type]) {
+        orbisyn_database.submissions[type] = [];
+        console.log(`🗑️ Cleared ${type} submissions`);
+      } else {
+        Object.keys(orbisyn_database.submissions).forEach(key => {
+          orbisyn_database.submissions[key] = [];
+        });
+        console.log('🗑️ Cleared all submissions');
+      }
+      DatabaseManager.save();
+    },
+    
+    clearLogs: (category = null) => {
+      if (category && orbisyn_database.logs[category]) {
+        orbisyn_database.logs[category] = [];
+        console.log(`🗑️ Cleared ${category} logs`);
+      } else {
+        Object.keys(orbisyn_database.logs).forEach(key => {
+          orbisyn_database.logs[key] = [];
+        });
+        console.log('🗑️ Cleared all logs');
+      }
+      DatabaseManager.save();
+    },
+    
+    // Reset database
+    reset: () => {
+      localStorage.removeItem('orbisyn_database');
+      console.log('🔄 Database reset - refresh page to reinitialize');
+    },
+    
+    // Help
+    help: () => {
+      console.log(`
+🗄️ Orbisyn Database Console Commands:
+
+📊 Data Viewing:
+  OrbisDB.viewAll()                    - View complete database
+  OrbisDB.viewUsers()                  - View all users
+  OrbisDB.viewSubmissions()            - View all form submissions
+  OrbisDB.viewSubmissions('getStarted') - View specific form type
+  OrbisDB.viewLogs()                   - View all logs
+  OrbisDB.viewLogs('security')         - View specific log category
+
+📈 Statistics:
+  OrbisDB.stats()                      - View database statistics
+
+💾 Data Management:
+  OrbisDB.export()                     - Export database to JSON file
+  OrbisDB.clearSubmissions()           - Clear all submissions
+  OrbisDB.clearSubmissions('getStarted') - Clear specific form submissions
+  OrbisDB.clearLogs()                  - Clear all logs
+  OrbisDB.reset()                      - Reset entire database
+
+❓ Help:
+  OrbisDB.help()                       - Show this help message
+      `);
+    }
+  };
+
+  // Log available console commands
+  console.log('🗄️ Orbisyn Database System Initialized!');
+  console.log('💡 Type OrbisDB.help() for available commands');
+  console.log('📊 Current stats:', DatabaseManager.getStats());
 
   // Open login modal when Login button is clicked
   loginBtn.addEventListener('click', () => {
@@ -1472,57 +1747,88 @@
     }
   });
 
-  // Form submission with enhanced credential validation
+  // Form submission with database integration
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
     // Basic form validation
     if (!loginField.value.trim() || !passwordField.value.trim()) {
       showError('Please fill in all required fields.');
+      DatabaseManager.log('errors', 'Login form validation failed - empty fields');
       return;
     }
     
-    // Check credentials
-    const credentials = testCredentials[currentLoginType];
+    // Check credentials from database
+    const users = orbisyn_database.users[currentLoginType];
     const loginValue = loginField.value.trim();
     const passwordValue = passwordField.value.trim();
     let user = null;
     
     if (currentLoginType === 'employer') {
-      user = credentials.find(cred => 
-        cred.email.toLowerCase() === loginValue.toLowerCase() && 
-        cred.password === passwordValue
+      user = users.find(u => 
+        u.email.toLowerCase() === loginValue.toLowerCase() && 
+        u.password === passwordValue &&
+        u.status === 'active'
       );
     } else {
-      user = credentials.find(cred => 
-        cred.username === loginValue && 
-        cred.password === passwordValue
+      user = users.find(u => 
+        u.username === loginValue && 
+        u.password === passwordValue &&
+        u.status === 'active'
       );
     }
     
     if (user) {
-      // Successful login
+      // Successful login - Record in database
+      const loginId = DatabaseManager.recordLoginAttempt(currentLoginType, loginValue, true, user);
       const platformName = currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex';
+      
       showSuccess(`Welcome back, ${user.name}! Redirecting to ${platformName}...`);
+      
+      // Reset attempt count on successful login
+      attemptCount = 0;
+      
       setTimeout(() => {
         closeLoginModal();
-        // Here you would redirect to the appropriate dashboard
-        console.log(`Successfully logged in as ${user.role} on ${platformName}`);
-        console.log('User details:', user);
-        alert(`Login successful! Welcome to ${platformName} dashboard, ${user.name}!`);
+        DatabaseManager.log('security', `Successful login for ${user.name} (${user.role})`, {
+          loginId: loginId,
+          userId: user.id,
+          platform: platformName
+        });
+        
+        console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
+        console.log('👤 User details:', user);
+        alert(`🎉 Login successful! Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}`);
       }, 2000);
+      
     } else {
-      // Failed login
+      // Failed login - Record attempt
+      DatabaseManager.recordLoginAttempt(currentLoginType, loginValue, false);
       attemptCount++;
+      
       if (attemptCount >= 2 && attemptCount < 5) {
         attemptWarning.classList.add('show');
+        DatabaseManager.log('security', `Multiple failed login attempts for ${loginValue}`, {
+          attemptCount: attemptCount,
+          loginType: currentLoginType
+        });
       }
+      
       if (attemptCount >= 5) {
         showError('Account has been locked due to too many failed attempts. Please contact your system administrator.');
         disableLoginButton();
+        DatabaseManager.log('security', `Account locked due to failed attempts for ${loginValue}`, {
+          attemptCount: attemptCount,
+          loginType: currentLoginType
+        });
         return;
       }
+      
       showError('Invalid credentials. Please check your login information and try again.');
+      DatabaseManager.log('security', `Failed login attempt for ${loginValue}`, {
+        attemptCount: attemptCount,
+        loginType: currentLoginType
+      });
     }
   });
 
