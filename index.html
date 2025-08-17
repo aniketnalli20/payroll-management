@@ -510,6 +510,169 @@
     }
   }
 
+  /* Chaotic Orbit Loader Animation */
+  .chaotic-orbit {
+    --uib-size: 35px;
+    --uib-speed: 1.5s;
+    --uib-color: #007bff;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--uib-size);
+    width: var(--uib-size);
+    animation: rotate936 calc(var(--uib-speed) * 1.667) infinite linear;
+  }
+
+  .chaotic-orbit::before,
+  .chaotic-orbit::after {
+    content: '';
+    position: absolute;
+    height: 60%;
+    width: 60%;
+    border-radius: 50%;
+    background-color: var(--uib-color);
+    will-change: transform;
+    flex-shrink: 0;
+  }
+
+  .chaotic-orbit::before {
+    animation: orbit var(--uib-speed) linear infinite;
+  }
+
+  .chaotic-orbit::after {
+    animation: orbit var(--uib-speed) linear calc(var(--uib-speed) / -2) infinite;
+  }
+
+  @keyframes rotate936 {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes orbit {
+    0% { transform: translate(calc(var(--uib-size) * 0.5)) scale(0.73684); opacity: 0.65; }
+    5% { transform: translate(calc(var(--uib-size) * 0.4)) scale(0.684208); opacity: 0.58; }
+    10% { transform: translate(calc(var(--uib-size) * 0.3)) scale(0.631576); opacity: 0.51; }
+    15% { transform: translate(calc(var(--uib-size) * 0.2)) scale(0.578944); opacity: 0.44; }
+    20% { transform: translate(calc(var(--uib-size) * 0.1)) scale(0.526312); opacity: 0.37; }
+    25% { transform: translate(0%) scale(0.47368); opacity: 0.3; }
+    30% { transform: translate(calc(var(--uib-size) * -0.1)) scale(0.526312); opacity: 0.37; }
+    35% { transform: translate(calc(var(--uib-size) * -0.2)) scale(0.578944); opacity: 0.44; }
+    40% { transform: translate(calc(var(--uib-size) * -0.3)) scale(0.631576); opacity: 0.51; }
+    45% { transform: translate(calc(var(--uib-size) * -0.4)) scale(0.684208); opacity: 0.58; }
+    50% { transform: translate(calc(var(--uib-size) * -0.5)) scale(0.73684); opacity: 0.65; }
+    55% { transform: translate(calc(var(--uib-size) * -0.4)) scale(0.789472); opacity: 0.72; }
+    60% { transform: translate(calc(var(--uib-size) * -0.3)) scale(0.842104); opacity: 0.79; }
+    65% { transform: translate(calc(var(--uib-size) * -0.2)) scale(0.894736); opacity: 0.86; }
+    70% { transform: translate(calc(var(--uib-size) * -0.1)) scale(0.947368); opacity: 0.93; }
+    75% { transform: translate(0%) scale(1); opacity: 1; }
+    80% { transform: translate(calc(var(--uib-size) * 0.1)) scale(0.947368); opacity: 0.93; }
+    85% { transform: translate(calc(var(--uib-size) * 0.2)) scale(0.894736); opacity: 0.86; }
+    90% { transform: translate(calc(var(--uib-size) * 0.3)) scale(0.842104); opacity: 0.79; }
+    95% { transform: translate(calc(var(--uib-size) * 0.4)) scale(0.789472); opacity: 0.72; }
+    100% { transform: translate(calc(var(--uib-size) * 0.5)) scale(0.73684); opacity: 0.65; }
+  }
+
+  /* Login Loading State */
+  .login-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(4px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 1.2em;
+    transition: all 0.3s ease;
+  }
+
+  .login-loading-overlay.show {
+    display: flex;
+  }
+
+  .login-loading-content {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .login-loading-message {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.4;
+  }
+
+  .login-loading-submessage {
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.3;
+  }
+
+  .login-loading-progress {
+    margin-top: 1rem;
+    width: 200px;
+    height: 4px;
+    background: #e9ecef;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .login-loading-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s ease;
+    animation: progressPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes progressPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Enhanced Demo Button Styles for Loader */
+  .demo-btn {
+    background: linear-gradient(90deg, #000 0%, #333 100%);
+    color: #fff;
+    padding: 0.8rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    transition: background 0.19s, box-shadow 0.19s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .demo-btn:hover {
+    background: linear-gradient(90deg, #111 10%, #000 90%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transform: translateY(-1px);
+  }
+
+  .status {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #666;
+    padding: 0.6rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+  }
+
   /* Login Form Modal Styles */
   .login-backdrop {
     position: fixed;
@@ -1064,6 +1227,21 @@
 <!-- Login Form Modal -->
 <div class="login-backdrop" id="loginBackdrop">
   <div class="login-card">
+    <!-- Loading Overlay -->
+    <div class="login-loading-overlay" id="loginLoadingOverlay">
+      <div class="login-loading-content">
+        <div class="chaotic-orbit"></div>
+        <div class="login-loading-message" id="loginLoadingMessage">
+          Authenticating your credentials...
+        </div>
+        <div class="login-loading-submessage" id="loginLoadingSubmessage">
+          Please wait while we verify your access
+        </div>
+        <div class="login-loading-progress">
+          <div class="login-loading-progress-bar" id="loginLoadingProgressBar"></div>
+        </div>
+      </div>
+    </div>
     <button class="login-close-btn" type="button" aria-label="Close" id="loginCloseBtn">
       <span class="material-icons">close</span>
     </button>
@@ -1306,40 +1484,51 @@
   formCompanyNameInput.addEventListener('input', updateFormProgress);
   formNumEmployeesInput.addEventListener('input', updateFormProgress);
 
-  // Move to step 2 and record form submission
+  // Move to step 2 and record form submission with loading animation
   formNextBtn.addEventListener('click', () => {
     if (formNextBtn.disabled) return;
     
-    // Record form submission in database
-    const formData = {
-      companyName: formCompanyNameInput.value.trim(),
-      numEmployees: parseInt(formNumEmployeesInput.value.trim()),
-      submissionSource: 'get-started-form',
-      step: 'company-info'
-    };
+    // Show processing state
+    formNextBtn.disabled = true;
+    formNextBtn.innerHTML = '<div class="chaotic-orbit" style="--uib-size: 20px; --uib-color: #fff;"></div>';
     
-    const submissionId = DatabaseManager.recordSubmission('getStarted', formData);
-    DatabaseManager.log('formSubmissions', 'Get Started form submitted', {
-      submissionId: submissionId,
-      companyName: formData.companyName,
-      numEmployees: formData.numEmployees
-    });
-    
-    console.log('📝 Get Started form submitted:', formData);
-    console.log('🆔 Submission ID:', submissionId);
-    
-    // Move to step 2
-    formStep1.classList.remove('active');
-    formStep2.classList.add('active');
-    formProgressBarFill.style.width = '100%';
-    formProgressSteps[0].classList.remove('active');
-    formProgressSteps[1].classList.add('active');
-    
-    // Auto-close after 3 seconds
+    // Simulate processing delay
     setTimeout(() => {
-      closeFormModal();
-      alert(`✅ Thank you ${formData.companyName}! Your information has been recorded.\n\n📊 Company: ${formData.companyName}\n👥 Employees: ${formData.numEmployees}\n🆔 Reference: ${submissionId.slice(-8)}\n\nA representative will contact you shortly!`);
-    }, 3000);
+      // Record form submission in database
+      const formData = {
+        companyName: formCompanyNameInput.value.trim(),
+        numEmployees: parseInt(formNumEmployeesInput.value.trim()),
+        submissionSource: 'get-started-form',
+        step: 'company-info'
+      };
+      
+      const submissionId = DatabaseManager.recordSubmission('getStarted', formData);
+      DatabaseManager.log('formSubmissions', 'Get Started form submitted', {
+        submissionId: submissionId,
+        companyName: formData.companyName,
+        numEmployees: formData.numEmployees
+      });
+      
+      console.log('📝 Get Started form submitted:', formData);
+      console.log('🆔 Submission ID:', submissionId);
+      
+      // Move to step 2
+      formStep1.classList.remove('active');
+      formStep2.classList.add('active');
+      formProgressBarFill.style.width = '100%';
+      formProgressSteps[0].classList.remove('active');
+      formProgressSteps[1].classList.add('active');
+      
+      // Auto-close after 3 seconds
+      setTimeout(() => {
+        closeFormModal();
+        alert(`✅ Thank you ${formData.companyName}! Your information has been recorded.\n\n📊 Company: ${formData.companyName}\n👥 Employees: ${formData.numEmployees}\n🆔 Reference: ${submissionId.slice(-8)}\n\nA representative will contact you shortly!`);
+        
+        // Reset button
+        formNextBtn.disabled = false;
+        formNextBtn.innerHTML = 'Next';
+      }, 3000);
+    }, 1000);
   });
 
   // Initialize form progress
@@ -1398,7 +1587,8 @@
       contactUs: [],
       newsletter: [],
       loginAttempts: [],
-      registrations: []
+      registrations: [],
+      passwordReset: []
     },
     
     // System Logs
@@ -1747,9 +1937,69 @@
     }
   });
 
-  // Form submission with database integration
+  // Login Loading Animation Controller
+  const loginLoadingOverlay = document.getElementById('loginLoadingOverlay');
+  const loginLoadingMessage = document.getElementById('loginLoadingMessage');
+  const loginLoadingSubmessage = document.getElementById('loginLoadingSubmessage');
+  const loginLoadingProgressBar = document.getElementById('loginLoadingProgressBar');
+
+  function showLoginLoader(type = 'authenticating') {
+    loginLoadingOverlay.classList.add('show');
+    
+    const messages = {
+      authenticating: {
+        message: 'Authenticating your credentials...',
+        submessage: 'Please wait while we verify your access',
+        color: '#007bff'
+      },
+      employer: {
+        message: 'Connecting to OrbiWave...',
+        submessage: 'Preparing your employer dashboard',
+        color: '#28a745'
+      },
+      employee: {
+        message: 'Connecting to OrbiFlex...',
+        submessage: 'Loading your employee portal',
+        color: '#17a2b8'
+      },
+      failed: {
+        message: 'Authentication failed',
+        submessage: 'Please check your credentials',
+        color: '#dc3545'
+      },
+      locked: {
+        message: 'Account security check...',
+        submessage: 'Verifying account status',
+        color: '#ffc107'
+      }
+    };
+    
+    const config = messages[type] || messages.authenticating;
+    loginLoadingMessage.textContent = config.message;
+    loginLoadingSubmessage.textContent = config.submessage;
+    
+    // Update loader color
+    document.documentElement.style.setProperty('--uib-color', config.color);
+    
+    // Animate progress bar
+    loginLoadingProgressBar.style.width = '0%';
+    setTimeout(() => {
+      loginLoadingProgressBar.style.width = '100%';
+    }, 100);
+  }
+
+  function hideLoginLoader() {
+    loginLoadingOverlay.classList.remove('show');
+    loginLoadingProgressBar.style.width = '0%';
+  }
+
+  // Form submission with animated loading states
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    console.log('🔍 Login form submitted');
+    console.log('📝 Current login type:', currentLoginType);
+    console.log('📧 Login field value:', loginField.value);
+    console.log('🔒 Password field has value:', !!passwordField.value);
     
     // Basic form validation
     if (!loginField.value.trim() || !passwordField.value.trim()) {
@@ -1758,78 +2008,110 @@
       return;
     }
     
-    // Check credentials from database
-    const users = orbisyn_database.users[currentLoginType];
-    const loginValue = loginField.value.trim();
-    const passwordValue = passwordField.value.trim();
-    let user = null;
+    // Show initial loading animation
+    hideAllMessages();
+    showLoginLoader('authenticating');
     
-    if (currentLoginType === 'employer') {
-      user = users.find(u => 
-        u.email.toLowerCase() === loginValue.toLowerCase() && 
-        u.password === passwordValue &&
-        u.status === 'active'
-      );
-    } else {
-      user = users.find(u => 
-        u.username === loginValue && 
-        u.password === passwordValue &&
-        u.status === 'active'
-      );
-    }
-    
-    if (user) {
-      // Successful login - Record in database
-      const loginId = DatabaseManager.recordLoginAttempt(currentLoginType, loginValue, true, user);
-      const platformName = currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex';
+    // Simulate authentication delay for better UX
+    setTimeout(() => {
+      // Check credentials from database
+      const users = orbisyn_database.users[currentLoginType];
+      const loginValue = loginField.value.trim();
+      const passwordValue = passwordField.value.trim();
+      let user = null;
       
-      showSuccess(`Welcome back, ${user.name}! Redirecting to ${platformName}...`);
+      console.log('👥 Available users for', currentLoginType, ':', users);
       
-      // Reset attempt count on successful login
-      attemptCount = 0;
-      
-      setTimeout(() => {
-        closeLoginModal();
-        DatabaseManager.log('security', `Successful login for ${user.name} (${user.role})`, {
-          loginId: loginId,
-          userId: user.id,
-          platform: platformName
+      if (currentLoginType === 'employer') {
+        user = users.find(u => {
+          const emailMatch = u.email.toLowerCase() === loginValue.toLowerCase();
+          const passwordMatch = u.password === passwordValue;
+          const statusMatch = u.status === 'active';
+          console.log(`🔍 Checking user ${u.email}: email=${emailMatch}, password=${passwordMatch}, status=${statusMatch}`);
+          return emailMatch && passwordMatch && statusMatch;
         });
+      } else {
+        user = users.find(u => {
+          const usernameMatch = u.username === loginValue;
+          const passwordMatch = u.password === passwordValue;
+          const statusMatch = u.status === 'active';
+          console.log(`🔍 Checking user ${u.username}: username=${usernameMatch}, password=${passwordMatch}, status=${statusMatch}`);
+          return usernameMatch && passwordMatch && statusMatch;
+        });
+      }
+      
+      console.log('👤 Found user:', user);
+      
+      if (user) {
+        // Show platform-specific loading
+        showLoginLoader(currentLoginType);
         
-        console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
-        console.log('👤 User details:', user);
-        alert(`🎉 Login successful! Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}`);
-      }, 2000);
-      
-    } else {
-      // Failed login - Record attempt
-      DatabaseManager.recordLoginAttempt(currentLoginType, loginValue, false);
-      attemptCount++;
-      
-      if (attemptCount >= 2 && attemptCount < 5) {
-        attemptWarning.classList.add('show');
-        DatabaseManager.log('security', `Multiple failed login attempts for ${loginValue}`, {
-          attemptCount: attemptCount,
-          loginType: currentLoginType
-        });
+        // Successful login - Record in database
+        const loginId = DatabaseManager.recordLoginAttempt(currentLoginType, loginValue, true, user);
+        const platformName = currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex';
+        
+        // Reset attempt count on successful login
+        attemptCount = 0;
+        
+        setTimeout(() => {
+          hideLoginLoader();
+          showSuccess(`Welcome back, ${user.name}! Redirecting to ${platformName}...`);
+          
+          setTimeout(() => {
+            closeLoginModal();
+            DatabaseManager.log('security', `Successful login for ${user.name} (${user.role})`, {
+              loginId: loginId,
+              userId: user.id,
+              platform: platformName
+            });
+            
+            console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
+            console.log('👤 User details:', user);
+            alert(`🎉 Login successful! Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}`);
+          }, 2000);
+        }, 1500);
+        
+      } else {
+        // Failed login - Show failure animation
+        showLoginLoader('failed');
+        
+        setTimeout(() => {
+          hideLoginLoader();
+          
+          // Record failed attempt
+          DatabaseManager.recordLoginAttempt(currentLoginType, loginValue, false);
+          attemptCount++;
+          
+          if (attemptCount >= 5) {
+            showLoginLoader('locked');
+            setTimeout(() => {
+              hideLoginLoader();
+              showError('Account has been locked due to too many failed attempts. Please contact your system administrator.');
+              disableLoginButton();
+              DatabaseManager.log('security', `Account locked due to failed attempts for ${loginValue}`, {
+                attemptCount: attemptCount,
+                loginType: currentLoginType
+              });
+            }, 1500);
+            return;
+          }
+          
+          if (attemptCount >= 2 && attemptCount < 5) {
+            attemptWarning.classList.add('show');
+            DatabaseManager.log('security', `Multiple failed login attempts for ${loginValue}`, {
+              attemptCount: attemptCount,
+              loginType: currentLoginType
+            });
+          }
+          
+          showError('Invalid credentials. Please check your login information and try again.');
+          DatabaseManager.log('security', `Failed login attempt for ${loginValue}`, {
+            attemptCount: attemptCount,
+            loginType: currentLoginType
+          });
+        }, 1200);
       }
-      
-      if (attemptCount >= 5) {
-        showError('Account has been locked due to too many failed attempts. Please contact your system administrator.');
-        disableLoginButton();
-        DatabaseManager.log('security', `Account locked due to failed attempts for ${loginValue}`, {
-          attemptCount: attemptCount,
-          loginType: currentLoginType
-        });
-        return;
-      }
-      
-      showError('Invalid credentials. Please check your login information and try again.');
-      DatabaseManager.log('security', `Failed login attempt for ${loginValue}`, {
-        attemptCount: attemptCount,
-        loginType: currentLoginType
-      });
-    }
+    }, 800); // Initial authentication delay
   });
 
   // Utility functions for enhanced login
@@ -1862,6 +2144,73 @@
     loginSubmitBtn.style.opacity = '1';
     loginSubmitBtn.style.cursor = 'pointer';
   }
+
+  // Forgot Username functionality
+  forgotUsername.addEventListener('click', (e) => {
+    e.preventDefault();
+    const userList = orbisyn_database.users.employee.map(u => `• ${u.username} (${u.name})`).join('\n');
+    alert(`📋 Available Employee Usernames:\n\n${userList}\n\n💡 Contact your HR department if you need assistance.`);
+    DatabaseManager.log('formSubmissions', 'Forgot username request', { loginType: currentLoginType });
+  });
+
+  // Forgot Password functionality
+  forgotPassword.addEventListener('click', (e) => {
+    e.preventDefault();
+    const message = currentLoginType === 'employer' 
+      ? '🔑 Password Reset Request\n\nFor security reasons, employer password resets must be handled by your IT administrator.\n\n📞 Please contact your IT support team with:\n• Your email address\n• Employee ID or company information\n• Reason for password reset\n\n🔒 A secure reset link will be sent to your registered email.'
+      : '🔑 Password Reset Request\n\nFor security reasons, employee password resets must be handled by your HR department.\n\n📞 Please contact your HR team with:\n• Your username\n• Employee ID\n• Department information\n\n🔒 Your password will be reset and provided securely.';
+    
+    alert(message);
+    
+    // Record the request
+    DatabaseManager.recordSubmission('passwordReset', {
+      loginType: currentLoginType,
+      requestedBy: loginField.value.trim() || 'unknown',
+      timestamp: new Date().toISOString()
+    });
+    DatabaseManager.log('security', 'Password reset requested', { 
+      loginType: currentLoginType,
+      identifier: loginField.value.trim() || 'unknown'
+    });
+  });
+
+  // Sign Up functionality
+  registerLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    if (currentLoginType === 'employer') {
+      // Employer registration
+      const companyName = prompt('🏢 Company Registration\n\nPlease enter your company name:');
+      if (companyName && companyName.trim()) {
+        const contactEmail = prompt('📧 Please enter your business email address:');
+        if (contactEmail && contactEmail.trim()) {
+          const registrationData = {
+            type: 'employer',
+            companyName: companyName.trim(),
+            contactEmail: contactEmail.trim(),
+            status: 'pending',
+            requestedFeatures: ['payroll', 'hr-management', 'reporting']
+          };
+          
+          DatabaseManager.recordSubmission('registrations', registrationData);
+          alert(`✅ Registration Request Submitted!\n\n🏢 Company: ${companyName}\n📧 Email: ${contactEmail}\n\n📞 A sales representative will contact you within 24 hours to:\n• Discuss your payroll needs\n• Provide custom pricing\n• Schedule a demo\n• Set up your account\n\n🆔 Reference: ${Date.now().toString().slice(-6)}`);
+        }
+      }
+    } else {
+      // Employee registration
+      alert(`👥 Employee Account Setup\n\n🏢 Employee accounts are created by your HR department.\n\n📞 Please contact your HR team with:\n• Your full name\n• Employee ID\n• Department\n• Start date\n• Manager's name\n\n💡 Your HR team will:\n• Create your OrbiFlex account\n• Provide your username and temporary password\n• Set up your payroll and benefits access\n• Schedule orientation if needed\n\n📧 You'll receive login credentials via your company email once your account is ready.`);
+      
+      DatabaseManager.recordSubmission('registrations', {
+        type: 'employee',
+        status: 'info-requested',
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    DatabaseManager.log('formSubmissions', 'Registration request', { 
+      loginType: currentLoginType 
+    });
+  });
 
   // Initialize login form
   updateLoginForm();
