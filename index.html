@@ -1,550 +1,666 @@
- with 3 employee 
  <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orbisyn Strategic Dashboard</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Symbols+Outlined" rel="stylesheet">
-    <style>
-    :root {
-        --dark-bg: #1a1a1a;
-        --light-bg: #f5f5f5;
-        --accent: #4fa6ff;
-        --font-main: 'Roboto', 'Helvetica Neue', sans-serif;
-        --font-icons: 'Material Symbols Outlined';
-        --navbar-height: 64px;
-    }
-    body {
-        margin: 0;
-        font-family: var(--font-main);
-        background: var(--light-bg);
-        color: #333;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-    /* Navbar */
-    .navbar {
-        background: var(--dark-bg);
-        color: white;
-        padding: 0 1rem;
-        height: var(--navbar-height);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
-        position: relative;
-        z-index: 5;
-    }
-    .brand {
-        font-weight: 600;
-        font-size: 1.3rem;
-    }
-    .nav-main {
-        display: flex;
-        gap: 0.75rem;
-    }
-    .nav-item {
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        padding: 0.8rem 1rem;
-        font: inherit;
-        font-weight: 500;
-        border-radius: 6px;
-        transition: background 0.2s;
-    }
-    .nav-item:hover {
-        background: rgba(255,255,255,0.1);
-    }
-    .hamburger {
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        font: inherit;
-        display: none;
-        padding: 0.5rem;
-    }
-    /* Drawer */
-    .drawer {
-        position: absolute;
-        top: var(--navbar-height);
-        left: 0;
-        width: 100%;
-        max-height: calc(100vh - var(--navbar-height));
-        overflow-y: auto;
-        background: rgba(26, 26, 26, 0.98);
-        color: white;
-        display: none;
-        z-index: 5;
-        border-radius: 0 0 8px 8px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.6);
-    }
-    .drawer.open {
-        display: block;
-    }
-    /* Drawer header */
-    .drawer-header {
-        padding: 16px 20px;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        font-weight: 600;
-        color: var(--accent);
-        font-size: 1.1rem;
-    }
-    /* Submenu sections */
-    .submenu-section {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-weight: 500;
-        margin: 0;
-        padding: 16px 20px;
-        cursor: pointer;
-        transition: background 0.1s;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .submenu-section:hover {
-        background: rgba(255,255,255,0.08);
-    }
-    .submenu-section.no-items {
-        cursor: default;
-        color: #ccc;
-    }
-    .submenu-section.no-items:hover {
-        background: transparent;
-    }
-    /* Expand/collapse indicator */
-    .expand-icon {
-        font-size: 1.2rem;
-        transition: transform 0.2s;
-        color: var(--accent);
-    }
-    .submenu-section.expanded .expand-icon {
-        transform: rotate(90deg);
-    }
-    /* Submenu items */
-    .submenu-items {
-        margin: 0;
-        padding: 0;
-        display: none;
-        background: rgba(40,40,40,0.9);
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .submenu-section.expanded + .submenu-items {
-        display: block;
-    }
-    .submenu-item {
-        padding: 16px 20px 16px 44px;
-        cursor: pointer;
-        transition: background 0.1s, color 0.1s;
-        font-weight: 400;
-        color: #e0e0e0;
-    }
-    .submenu-item:hover {
-        background: rgba(255,255,255,0.1);
-        color: white;
-    }
-    /* Modal */
-    .modal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 30;
-        background: white;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-        display: none;
-        max-width: 360px;
-        width: 90%;
-        animation: modalFadeIn 0.3s ease forwards;
-    }
-    @keyframes modalFadeIn {
-        from { opacity: 0; transform: translate(-50%, -52%); }
-        to { opacity: 1; transform: translate(-50%, -50%); }
-    }
-    .modal-content h2 {
-        margin: 0 0 24px;
-        color: var(--dark-bg);
-        font-weight: 600;
-        font-size: 1.5rem;
-        text-align: center;
-    }
-    .modal-content form {
-        display: flex;
-        flex-direction: column;
-    }
-    /* iOS-style input & button */
-    input {
-        background: white;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 16px;
-        margin: 12px 0;
-        width: 100%;
-        box-sizing: border-box;
-        font: inherit;
-        font-size: 1rem;
-        transition: all 0.2s;
-    }
-    input:focus {
-        border-color: var(--accent);
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(79,166,255,0.2);
-    }
-    button[type="submit"] {
-        background: var(--accent);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 16px;
-        margin-top: 16px;
-        font: inherit;
-        font-weight: 500;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    button[type="submit"]:hover {
-        background: #3d91e0;
-    }
-    .message {
-        margin-top: 16px;
-        color: #ff3b30;
-        font-size: 0.875rem;
-        text-align: center;
-    }
-    /* Dashboard */
-    .dashboard-content {
-        padding: 2rem;
-        margin-top: 0;
-    }
-    .dashboard-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
-        margin-top: 2rem;
-    }
-    .card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    }
-    .card h3 {
-        margin-top: 0;
-        color: var(--dark-bg);
-        font-weight: 600;
-    }
-    /* Responsive */
-    @media (max-width: 768px) {
-        .nav-main { display: none; }
-        .hamburger { display: block; }
-    }
-    /* Overlay (now unused, but kept for reference) */
-    .overlay {
-        display: none !important;
-    }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Orbisyn Strategic Dashboard</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Material+Symbols+Outlined" rel="stylesheet">
+  <style>
+  :root {
+    --dark-bg:#1a1a1a;
+    --light-bg:#f7f8fa;
+    --accent:#007aff;
+    --accent-hover:#005ecb;
+    --neutral-border:#d1d1d6;
+    --font-main:'Roboto','Helvetica Neue',sans-serif;
+    --navbar-height:64px;
+  }
+  
+  body {
+    margin:0; 
+    font-family:var(--font-main); 
+    background:var(--light-bg);
+    color:#333;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background:var(--dark-bg); 
+    height:var(--navbar-height);
+    display:flex; 
+    align-items:center; 
+    justify-content:space-between;
+    padding:0 1rem; 
+    color:white;
+  }
+  .brand { font-weight:600; font-size:1.3rem; }
+  .nav-main { display:flex; gap:0.75rem; }
+  .nav-item { 
+    background:none; 
+    border:none; 
+    color:white; 
+    cursor:pointer; 
+    padding:0.8rem 1rem; 
+    font:inherit; 
+    font-weight:500; 
+    border-radius:6px;
+  }
+  .nav-item:hover { background:none; }
+  .hamburger { 
+    background:none; 
+    border:none; 
+    color:white; 
+    cursor:pointer; 
+    display:none; 
+    padding:0.5rem; 
+  }
+  
+  /* Drawer */
+  .drawer {
+    position:absolute; 
+    top:var(--navbar-height); 
+    left:0; 
+    width:100%;
+    max-height:calc(100vh - var(--navbar-height));
+    overflow-y:auto; 
+    background:rgba(26,26,26,0.98); 
+    color:white;
+    display:none; 
+    z-index:5;
+    border-radius:0 0 8px 8px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.6);
+  }
+  .drawer.open { display:block; }
+  .drawer-header { 
+    padding:16px 20px; 
+    border-bottom:1px solid rgba(255,255,255,0.15); 
+    font-weight:600; 
+    color:var(--accent);
+  }
+  .submenu-section { 
+    padding:14px 16px; 
+    display:flex; 
+    justify-content:space-between; 
+    cursor:pointer; 
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .submenu-section:hover { background:rgba(255,255,255,0.08); }
+  .expand-icon { color:var(--accent); transition:transform 0.2s; }
+  .submenu-section.expanded .expand-icon { transform:rotate(90deg); }
+  .submenu-items { display:none; background:rgba(40,40,40,0.9); }
+  .submenu-section.expanded + .submenu-items { display:block; }
+  .submenu-item { padding:12px 32px; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .submenu-item:hover { background:rgba(255,255,255,0.1); }
+  
+  /* Modal */
+  .modal {
+    display:none; 
+    position:fixed; 
+    z-index:10; 
+    left:0; 
+    top:0; 
+    width:100%; 
+    height:100%;
+    background-color:rgba(0,0,0,0.4); 
+    padding-top:60px;
+  }
+  
+  .modal-content {
+    position:relative;
+    background:#fff; 
+    margin:0 auto; 
+    width:90%;
+    max-width:400px; 
+    border-radius:15px;
+    animation:fadeIn 0.3s ease; 
+    border:1px solid var(--neutral-border);
+    box-shadow:0 8px 25px rgba(0,0,0,0.15);
+    overflow:hidden;
+  }
+  
+  @keyframes fadeIn { 
+    from { opacity:0; transform:translateY(-20px); } 
+    to { opacity:1; transform:translateY(0); } 
+  }
+  
+  .modal-close-btn {
+    position:absolute; 
+    top:15px; 
+    right:15px; 
+    background:transparent; 
+    border:none; 
+    color:#aaa;
+    font-family:'Material Symbols Outlined'; 
+    font-size:24px; 
+    cursor:pointer; 
+    line-height:1;
+    padding:0;
+    transition:color 0.2s ease;
+  }
+  .modal-close-btn:hover { color:var(--accent); }
+  
+  .imgcontainer { 
+    text-align:center; 
+    padding:30px 0 20px 0;
+    background:#f8f9fa;
+    border-bottom:1px solid #eee;
+  }
+  
+  .avatar { 
+    width:80px; 
+    height:80px; 
+    border-radius:50%; 
+    object-fit:cover; 
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  /* Form Container - Fixed Alignment */
+  .container { 
+    padding:25px 30px 30px 30px;
+    box-sizing:border-box;
+  }
+  
+  /* Form Elements with Consistent Spacing */
+  .form-group {
+    margin-bottom:20px;
+    width:100%;
+  }
+  
+  .form-group:last-of-type {
+    margin-bottom:0;
+  }
+  
+  label {
+    display:block; 
+    font-weight:600; 
+    font-size:0.9rem; 
+    margin-bottom:8px; 
+    color:#1c1c1e;
+    text-align:left;
+  }
+  
+  input[type="email"],
+  input[type="password"],
+  input[type="date"] {
+    width:100%; 
+    padding:12px 16px; 
+    font-size:1rem;
+    border-radius:8px; 
+    border:1.5px solid var(--neutral-border);
+    background-color:#fff; 
+    transition:all 0.2s ease;
+    box-sizing:border-box;
+    font-family:inherit;
+  }
+  
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="date"]:focus {
+    border-color:var(--accent); 
+    outline:none; 
+    box-shadow:0 0 0 3px rgba(0,122,255,0.1);
+  }
+  
+  /* Checkbox Row */
+  .checkbox-row {
+    display:flex; 
+    align-items:center; 
+    margin-bottom:20px;
+    width:100%;
+  }
+  
+  .checkbox-row input[type="checkbox"] {
+    width:18px; 
+    height:18px; 
+    margin-right:10px; 
+    margin-bottom:0;
+    flex-shrink:0;
+  }
+  
+  .checkbox-row label {
+    margin:0;
+    font-weight:500;
+    font-size:0.9rem;
+    cursor:pointer;
+    flex:1;
+  }
+  
+  /* Button */
+  button[type="submit"] {
+    background:var(--accent); 
+    color:white; 
+    font-size:1rem; 
+    font-weight:600;
+    border:none; 
+    border-radius:8px; 
+    padding:14px 20px; 
+    width:100%; 
+    cursor:pointer;
+    margin-bottom:15px;
+    transition:background-color 0.2s ease;
+    box-sizing:border-box;
+  }
+  
+  button[type="submit"]:hover { 
+    background:var(--accent-hover); 
+  }
+  
+  /* Forgot Password Link */
+  .psw { 
+    text-align:center; 
+    font-size:0.85rem; 
+    margin-bottom:15px;
+    width:100%;
+  }
+  
+  .psw a { 
+    color:var(--accent); 
+    text-decoration:none;
+    font-weight:500;
+  }
+  
+  .psw a:hover { 
+    text-decoration:underline; 
+  }
+  
+  /* Message Area */
+  .message { 
+    font-size:0.85rem; 
+    text-align:center; 
+    min-height:20px; 
+    color:#f44336;
+    font-weight:500;
+    width:100%;
+  }
+  
+  /* Dashboard */
+  .dashboard-content { padding:2rem; }
+  .dashboard-cards { 
+    display:grid; 
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); 
+    gap:1.2rem; 
+  }
+  .card { 
+    background:white; 
+    padding:1.5rem; 
+    border-radius:12px; 
+    border:1px solid var(--neutral-border);
+    transition:box-shadow 0.2s ease;
+  }
+  .card:hover { 
+    box-shadow:0 4px 12px rgba(0,0,0,0.1); 
+  }
+  .card h3 { 
+    margin:0 0 10px 0; 
+    color:#333; 
+    font-size:1.1rem; 
+  }
+  
+  /* Responsive */
+  @media (max-width:768px) { 
+    .nav-main { display:none; } 
+    .hamburger { display:block; }
+    .container { padding:20px 25px; }
+  }
+  
+  @media (max-width:480px) {
+    .modal-content { width:95%; }
+    .container { padding:20px; }
+  }
+  </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="brand">Orbisyn</div>
-        <button class="hamburger" aria-label="Menu" aria-expanded="false">
-            <span class="material-symbols-outlined">menu</span>
-        </button>
-        <div class="nav-main">
-            <button class="nav-item" data-submenu="hr-payroll">HR & Payroll</button>
-            <button class="nav-item" data-submenu="benefits">Employee Benefits</button>
-            <button class="nav-item" data-submenu="solutions">Solutions</button>
-            <button class="nav-item" data-submenu="resources">Resources</button>
-            <button class="nav-item" data-submenu="contact">Contact</button>
-            <button class="nav-item" id="login-btn">Login</button>
-        </div>
-    </nav>
-    <div class="overlay"></div>
-    <div class="drawer"></div>
-    <div class="modal">
-        <div class="modal-content">
-            <h2>Login to Orbisyn</h2>
-            <form id="login-form">
-                <input type="email" id="login-email" placeholder="Email Address" required>
-                <input type="password" id="login-password" placeholder="Password" required>
-                <button type="submit">Sign In</button>
-                <div class="message" id="login-message"></div>
-            </form>
-        </div>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="brand">Orbisyn</div>
+    <div class="nav-main">
+      <button class="nav-item" data-submenu="hr-payroll">HR & Payroll</button>
+      <button class="nav-item" data-submenu="benefits">Employee Benefits</button>
+      <button class="nav-item" data-submenu="solutions">Solutions</button>
+      <button class="nav-item" data-submenu="resources">Resources</button>
+      <button class="nav-item" data-submenu="contact">Contact</button>
+      <button class="nav-item" id="login-btn">
+        <span class="material-symbols-outlined">person</span>
+      </button>
     </div>
-    <main class="dashboard-content">
-        <div id="admin-view" style="display: none;">
-            <h1>Admin Strategic Dashboard</h1>
-            <section class="dashboard-cards">
-                <div class="card">
-                    <h3>Workforce Analytics</h3>
-                    <p>Monitor headcount trends, attrition rates, and workforce planning metrics.</p>
-                </div>
-                <div class="card">
-                    <h3>Payroll Insights</h3>
-                    <p>Track payroll costs, compliance status, and financial analytics.</p>
-                </div>
-                <div class="card">
-                    <h3>Benefits Management</h3>
-                    <p>Oversee health insurance, retirement plans, and employee benefits.</p>
-                </div>
-                <div class="card">
-                    <h3>Compliance Dashboard</h3>
-                    <p>Monitor regulatory compliance and reporting requirements.</p>
-                </div>
-            </section>
+    <button class="hamburger">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </nav>
+
+  <div class="drawer"></div>
+
+  <!-- Login Modal -->
+  <div class="modal" id="login-modal">
+    <div class="modal-content">
+      <button class="modal-close-btn">&#xE5CD;</button>
+      <div class="imgcontainer">
+        <img src="https://img.freepik.com/free-vector/businesswoman-character-avatar-isolated_24877-60111.jpg" alt="User Avatar" class="avatar">
+      </div>
+      <form id="login-form">
+        <div class="container">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" placeholder="Enter your email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Enter Password" required>
+          </div>
+          
+          <div class="checkbox-row">
+            <input type="checkbox" id="remember-me" checked>
+            <label for="remember-me">Remember me</label>
+          </div>
+          
+          <button type="submit">Login</button>
+          
+          <div class="psw">
+            Forgot <a href="#" id="forgot-password-link">password?</a>
+          </div>
+          
+          <div class="message" id="login-message"></div>
         </div>
-        <div id="user-view" style="display: none;">
-            <h1>Employee Dashboard</h1>
-            <section class="dashboard-cards">
-                <div class="card">
-                    <h3>My Profile</h3>
-                    <p>View and update your personal information and preferences.</p>
-                </div>
-                <div class="card">
-                    <h3>Pay & Benefits</h3>
-                    <p>Access pay stubs, benefit information, and retirement plans.</p>
-                </div>
-                <div class="card">
-                    <h3>Time & Attendance</h3>
-                    <p>Track your work hours, request time off, and view schedules.</p>
-                </div>
-                <div class="card">
-                    <h3>Resources</h3>
-                    <p>Access company resources, policies, and support materials.</p>
-                </div>
-            </section>
+      </form>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal" id="forgot-password-modal">
+    <div class="modal-content">
+      <button class="modal-close-btn">&#xE5CD;</button>
+      <div class="imgcontainer">
+        <img src="https://img.freepik.com/free-vector/male-avatar-profile-picture-vector-illustration_268834-538.jpg" alt="Avatar" class="avatar">
+      </div>
+      <form id="forgot-password-form">
+        <div class="container">
+          <div class="form-group">
+            <label for="reset-email">Email Address</label>
+            <input type="email" id="reset-email" placeholder="Enter your email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" required>
+          </div>
+          
+          <div class="checkbox-row">
+            <input type="checkbox" id="view-password-checkbox">
+            <label for="view-password-checkbox">View my password instead of resetting</label>
+          </div>
+          
+          <button type="submit">Submit</button>
+          
+          <div class="message" id="forgot-password-message"></div>
         </div>
-    </main>
+      </form>
+    </div>
+  </div>
 
-    <script>
-    // DOM Elements
-    const hamburger = document.querySelector('.hamburger');
-    const drawer = document.querySelector('.drawer');
-    const overlay = document.querySelector('.overlay');
-    const modal = document.querySelector('.modal');
-    const loginForm = document.getElementById('login-form');
-    const loginMessage = document.getElementById('login-message');
-    const loginBtn = document.getElementById('login-btn');
-    const adminView = document.getElementById('admin-view');
-    const userView = document.getElementById('user-view');
+  <!-- Dashboard -->
+  <main class="dashboard-content">
+    <div id="admin-view" style="display:none;">
+      <h1>Admin Strategic Dashboard</h1>
+      <div class="dashboard-cards">
+        <div class="card">
+          <h3>Workforce Analytics</h3>
+          <p>Monitor headcount trends, attrition rates, and workforce planning metrics.</p>
+        </div>
+        <div class="card">
+          <h3>Payroll Insights</h3>
+          <p>Track payroll costs, compliance status, and financial analytics.</p>
+        </div>
+        <div class="card">
+          <h3>Benefits Management</h3>
+          <p>Oversee health insurance, retirement plans, and employee benefits.</p>
+        </div>
+        <div class="card">
+          <h3>Compliance Dashboard</h3>
+          <p>Monitor regulatory compliance and reporting requirements.</p>
+        </div>
+      </div>
+    </div>
+    <div id="user-view" style="display:none;">
+      <h1>Employee Dashboard</h1>
+      <div class="dashboard-cards">
+        <div class="card">
+          <h3>My Profile</h3>
+          <p>View and update your personal information and preferences.</p>
+        </div>
+        <div class="card">
+          <h3>Pay & Benefits</h3>
+          <p>Access pay stubs, benefit information, and retirement plans.</p>
+        </div>
+        <div class="card">
+          <h3>Time & Attendance</h3>
+          <p>Track your work hours, request time off, and view schedules.</p>
+        </div>
+        <div class="card">
+          <h3>Resources</h3>
+          <p>Access company resources, policies, and support materials.</p>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    // App State
-    let currentUser = null;
-    let isDrawerOpen = false;
-    let currentSubmenu = null;
+<script>
+const hamburger = document.querySelector('.hamburger'),
+      drawer = document.querySelector('.drawer'),
+      loginModal = document.getElementById('login-modal'),
+      forgotPasswordModal = document.getElementById('forgot-password-modal'),
+      loginForm = document.getElementById('login-form'),
+      forgotPasswordForm = document.getElementById('forgot-password-form'),
+      loginMessage = document.getElementById('login-message'),
+      forgotPasswordMessage = document.getElementById('forgot-password-message'),
+      loginBtn = document.getElementById('login-btn'),
+      adminView = document.getElementById('admin-view'),
+      userView = document.getElementById('user-view'),
+      forgotLink = document.getElementById('forgot-password-link');
 
-    // Navbar Contents (unchanged, keep your existing object)
-    const navbar = {
-        'hr-payroll': {
-            title: 'HR & Payroll',
-            sections: [
-                { title: 'Payroll Services', items: ['Full-Service Payroll', 'Small Business Payroll', 'Multi-State Payroll', 'Payroll Tax Services', 'Direct Deposit', 'Payroll Reporting'], hasItems: true },
-                { title: 'Human Resources', items: ['HR Consulting', 'Employee Handbook', 'HR Compliance', 'Performance Management', 'Recruiting Services', 'Training & Development'], hasItems: true },
-                { title: 'Workforce Planning', items: ['Time & Attendance', 'Employee Scheduling', 'Labor Analytics', 'Workforce Optimization', 'Compliance Tracking', 'Reporting Dashboard'], hasItems: true }
-            ]
-        },
-        'benefits': {
-            title: 'Employee Benefits',
-            sections: [
-                { title: 'Health Insurance', items: ['Medical Plans', 'Dental Coverage', 'Vision Care', 'HSA Administration'], hasItems: true },
-                { title: 'Retirement Plans', items: ['401(k) Administration', 'Retirement Planning', 'Investment Options', 'Compliance Management'], hasItems: true },
-                { title: 'Voluntary Benefits', items: ['Life Insurance', 'Disability Insurance', 'Flexible Spending', 'Employee Assistance'], hasItems: true },
-                { title: 'Workers Compensation', items: ['Coverage Options', 'Claims Management', 'Safety Programs', 'Risk Assessment'], hasItems: true }
-            ]
-        },
-        'solutions': {
-            title: 'Solutions',
-            sections: [
-                { title: 'By Business Size', items: ['Startup Solutions', 'Small Business (1-19)', 'Mid-Market (20-99)', 'Enterprise (100+)', 'Self-Employed'], hasItems: true },
-                { title: 'By Industry', items: ['Healthcare', 'Professional Services', 'Manufacturing', 'Retail', 'Restaurants & Hospitality', 'Non-Profit Organizations', 'Construction'], hasItems: true },
-                { title: 'Integration Services', items: ['API Integration', 'Third-Party Connections', 'Data Migration', 'Custom Solutions'], hasItems: true },
-                { title: 'Professional Services', items: ['Implementation', 'Training', 'Ongoing Support', 'Consultation'], hasItems: true }
-            ]
-        },
-        'resources': {
-            title: 'Resources',
-            sections: [
-                { title: 'Business Calculators', items: ['Payroll Tax Calculator', 'Overtime Calculator', 'Benefits Cost Calculator', 'ROI Calculator', 'Compliance Cost Calculator', 'Time & Attendance Calculator'], hasItems: true },
-                { title: 'Learning Center', items: ['HR Best Practices', 'Compliance Guides', 'Industry Insights', 'Video Tutorials', 'Webinars', 'Case Studies'], hasItems: true },
-                { title: 'Compliance Resources', items: ['State Requirements', 'Federal Regulations', 'Industry Standards', 'Updates & Alerts'], hasItems: true },
-                { title: 'Support Center', items: ['Help Documentation', 'Video Guides', 'FAQ', 'Contact Support'], hasItems: true }
-            ]
-        },
-        'contact': {
-            title: 'Contact',
-            sections: [
-                { title: 'Sales', items: ['Request Demo', 'Get Pricing', 'Schedule Consultation', 'Product Information'], hasItems: true },
-                { title: 'Support', items: ['Technical Support', 'Account Management', 'Training Resources', 'Service Status'], hasItems: true },
-                { title: 'Get Started', items: [], hasItems: false }
-            ]
-        }
-    };
+let currentUser = null, isDrawerOpen = false, currentSubmenu = null;
 
-    // Toggle Drawer (updated for dropdown/collapse)
-    function toggleDrawer(open, submenu = null) {
-        if (open && submenu && currentSubmenu === submenu && isDrawerOpen) {
-            drawer.classList.remove('open');
-            isDrawerOpen = false;
-            currentSubmenu = null;
-            return;
-        }
-        isDrawerOpen = open;
-        drawer.classList.toggle('open', isDrawerOpen);
-        hamburger.setAttribute('aria-expanded', isDrawerOpen);
-        if (submenu && isDrawerOpen) {
-            renderSubmenu(submenu);
-        } else {
-            drawer.innerHTML = '';
-        }
-        currentSubmenu = submenu;
-    }
+// Set max date for DOB
+document.getElementById('dob').max = new Date().toISOString().split("T")[0];
 
-    // Render Submenu in Drawer
-    function renderSubmenu(key) {
-        const menuData = navbar[key];
-        drawer.innerHTML = `<div class="drawer-header">${menuData.title}</div>`;
-        
-        menuData.sections.forEach(section => {
-            const sectionEl = document.createElement('div');
-            sectionEl.className = `submenu-section ${section.hasItems ? '' : 'no-items'}`;
-            
-            const titleSpan = document.createElement('span');
-            titleSpan.textContent = section.title;
-            sectionEl.appendChild(titleSpan);
-            
-            if (section.hasItems) {
-                const expandIcon = document.createElement('span');
-                expandIcon.className = 'material-symbols-outlined expand-icon';
-                expandIcon.textContent = 'chevron_right';
-                sectionEl.appendChild(expandIcon);
-                
-                sectionEl.addEventListener('click', () => {
-                    sectionEl.classList.toggle('expanded');
-                });
-            }
-            
-            drawer.appendChild(sectionEl);
+const navbar = {
+  'hr-payroll': {
+    title: 'HR & Payroll',
+    sections: [
+      { title: 'Payroll Services', items: ['Full-Service Payroll', 'Small Business Payroll', 'Multi-State Payroll', 'Payroll Tax Services'] },
+      { title: 'Human Resources', items: ['HR Consulting', 'Employee Handbook', 'HR Compliance', 'Performance Management'] }
+    ]
+  },
+  'benefits': {
+    title: 'Employee Benefits',
+    sections: [
+      { title: 'Health Insurance', items: ['Medical Plans', 'Dental Coverage', 'Vision Care', 'HSA Administration'] },
+      { title: 'Retirement Plans', items: ['401(k) Administration', 'Retirement Planning', 'Investment Options'] }
+    ]
+  },
+  'solutions': {
+    title: 'Solutions',
+    sections: [
+      { title: 'By Business Size', items: ['Startup Solutions', 'Small Business (1-19)', 'Mid-Market (20-99)', 'Enterprise (100+)'] }
+    ]
+  },
+  'resources': {
+    title: 'Resources',
+    sections: [
+      { title: 'Business Calculators', items: ['Payroll Tax Calculator', 'Overtime Calculator', 'Benefits Cost Calculator'] }
+    ]
+  },
+  'contact': {
+    title: 'Contact',
+    sections: [
+      { title: 'Sales', items: ['Request Demo', 'Get Pricing', 'Schedule Consultation'] }
+    ]
+  }
+};
 
-            if (section.hasItems) {
-                const itemsEl = document.createElement('div');
-                itemsEl.className = 'submenu-items';
-                section.items.forEach(item => {
-                    const itemEl = document.createElement('div');
-                    itemEl.className = 'submenu-item';
-                    itemEl.textContent = item;
-                    itemEl.onclick = () => {
-                        console.log('Clicked:', item);
-                        toggleDrawer(false);
-                    };
-                    itemsEl.appendChild(itemEl);
-                });
-                drawer.appendChild(itemsEl);
-            }
-        });
-    }
+function toggleDrawer(open, submenu = null) {
+  if (open && submenu && currentSubmenu === submenu && isDrawerOpen) {
+    drawer.classList.remove('open');
+    isDrawerOpen = false;
+    currentSubmenu = null;
+    return;
+  }
+  isDrawerOpen = open;
+  drawer.classList.toggle('open', isDrawerOpen);
+  if (submenu && isDrawerOpen) {
+    renderSubmenu(submenu);
+  } else if (!submenu) {
+    drawer.innerHTML = '';
+  }
+  currentSubmenu = submenu;
+}
 
-    // Toggle Login Modal (focus management for iOS feel)
-    function toggleLoginModal() {
-        modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-        if (modal.style.display === 'block') {
-            loginForm.reset();
-            loginMessage.textContent = '';
-            setTimeout(() => {
-                document.getElementById('login-email').focus();
-            }, 0);
-        }
-    }
-
-    // Mock Authentication
-    function login(email, password) {
-        if (email === 'admin@orbisyn.com' && password === 'admin123') {
-            currentUser = { email, role: 'admin' };
-        } else if (email && password) {
-            currentUser = { email, role: 'user' };
-        } else {
-            return false;
-        }
-        localStorage.setItem('orbisyn-user', JSON.stringify(currentUser));
-        return true;
-    }
-
-    // Check Session on Load
-    function checkSession() {
-        const user = localStorage.getItem('orbisyn-user');
-        if (user) {
-            currentUser = JSON.parse(user);
-            renderDashboard();
-        }
-    }
-
-    // Render Dashboard Based on Role
-    function renderDashboard() {
-        adminView.style.display = currentUser?.role === 'admin' ? 'block' : 'none';
-        userView.style.display = currentUser?.role === 'user' ? 'block' : 'none';
-        loginBtn.textContent = currentUser ? `Logout (${currentUser.email})` : 'Login';
-    }
-
-    // Event Listeners
-    hamburger.addEventListener('click', () => {
-        toggleDrawer(!isDrawerOpen);
+function renderSubmenu(key) {
+  const menuData = navbar[key];
+  drawer.innerHTML = `<div class="drawer-header">${menuData.title}</div>`;
+  menuData.sections.forEach(section => {
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'submenu-section';
+    sectionEl.innerHTML = `${section.title}<span class="material-symbols-outlined expand-icon">chevron_right</span>`;
+    sectionEl.addEventListener('click', () => sectionEl.classList.toggle('expanded'));
+    drawer.appendChild(sectionEl);
+    
+    const itemsEl = document.createElement('div');
+    itemsEl.className = 'submenu-items';
+    section.items.forEach(item => {
+      const itemEl = document.createElement('div');
+      itemEl.className = 'submenu-item';
+      itemEl.textContent = item;
+      itemsEl.appendChild(itemEl);
     });
+    drawer.appendChild(itemsEl);
+  });
+}
 
-    loginBtn.addEventListener('click', function() {
-        if (currentUser) {
-            localStorage.removeItem('orbisyn-user');
-            currentUser = null;
-            renderDashboard();
-        } else {
-            toggleLoginModal();
-        }
-    });
+function toggleLoginModal() {
+  loginModal.style.display = loginModal.style.display === 'block' ? 'none' : 'block';
+  if (loginModal.style.display === 'block') {
+    loginMessage.textContent = '';
+    setTimeout(() => document.getElementById('login-email').focus(), 100);
+  }
+}
 
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        
-        if (login(email, password)) {
-            renderDashboard();
-            toggleLoginModal();
-        } else {
-            loginMessage.textContent = 'Invalid credentials';
-        }
-    });
+function toggleForgotPasswordModal() {
+  forgotPasswordModal.style.display = forgotPasswordModal.style.display === 'block' ? 'none' : 'block';
+  if (forgotPasswordModal.style.display === 'block') {
+    forgotPasswordMessage.textContent = '';
+    setTimeout(() => document.getElementById('reset-email').focus(), 100);
+  }
+}
 
-    // Initialize navbar click handlers
-    document.querySelectorAll('.nav-item[data-submenu]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const submenu = e.currentTarget.getAttribute('data-submenu');
-            toggleDrawer(true, submenu);
-        });
-    });
+function login(email, password) {
+  if (email === 'admin@orbisyn.com' && password === 'admin123') {
+    currentUser = { email, role: 'admin' };
+  } else if (email && password) {
+    currentUser = { email, role: 'user' };
+  } else {
+    return false;
+  }
+  localStorage.setItem('orbisyn-user', JSON.stringify(currentUser));
+  return true;
+}
 
-    // Escape key for modal/drawer
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (modal.style.display === 'block') {
-                toggleLoginModal();
-            }
-            toggleDrawer(false);
-        }
-    });
+function renderDashboard() {
+  adminView.style.display = currentUser?.role === 'admin' ? 'block' : 'none';
+  userView.style.display = currentUser?.role === 'user' ? 'block' : 'none';
+  loginBtn.innerHTML = currentUser 
+    ? '<span class="material-symbols-outlined">logout</span>' 
+    : '<span class="material-symbols-outlined">person</span>';
+}
 
-    // Initialize app
-    checkSession();
-    </script>
+// Event Listeners
+loginBtn.addEventListener('click', () => {
+  if (currentUser) {
+    localStorage.removeItem('orbisyn-user');
+    currentUser = null;
+    renderDashboard();
+  } else {
+    toggleLoginModal();
+  }
+});
+
+forgotLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  toggleLoginModal();
+  toggleForgotPasswordModal();
+});
+
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  if (login(email, password)) {
+    renderDashboard();
+    toggleLoginModal();
+  } else {
+    loginMessage.textContent = 'Invalid credentials. Please try again.';
+  }
+});
+
+forgotPasswordForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('reset-email').value.trim();
+  const dob = document.getElementById('dob').value;
+  const viewPassword = document.getElementById('view-password-checkbox').checked;
+  
+  if (!email || !dob) {
+    forgotPasswordMessage.style.color = '#f44336';
+    forgotPasswordMessage.textContent = 'Please enter both email and date of birth.';
+    return;
+  }
+  
+  forgotPasswordMessage.style.color = '#007aff';
+  if (viewPassword) {
+    forgotPasswordMessage.textContent = 'Your password is: ******** (demo mode)';
+  } else {
+    forgotPasswordMessage.textContent = 'If an account exists, a reset link has been sent.';
+  }
+  
+  setTimeout(() => {
+    toggleForgotPasswordModal();
+  }, 3000);
+});
+
+hamburger.addEventListener('click', () => toggleDrawer(!isDrawerOpen));
+
+document.querySelectorAll('.nav-item[data-submenu]').forEach(btn => 
+  btn.addEventListener('click', (e) => {
+    const submenu = e.currentTarget.getAttribute('data-submenu');
+    toggleDrawer(true, submenu);
+  })
+);
+
+// Close modals with close button
+document.querySelectorAll('.modal-close-btn').forEach(btn => 
+  btn.addEventListener('click', () => {
+    loginModal.style.display = 'none';
+    forgotPasswordModal.style.display = 'none';
+  })
+);
+
+// Close modals with Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    loginModal.style.display = 'none';
+    forgotPasswordModal.style.display = 'none';
+    toggleDrawer(false);
+  }
+});
+
+// Initialize
+(function init() {
+  const user = localStorage.getItem('orbisyn-user');
+  if (user) {
+    currentUser = JSON.parse(user);
+  }
+  renderDashboard();
+})();
+</script>
 </body>
 </html>
