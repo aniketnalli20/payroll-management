@@ -154,6 +154,48 @@
     outline: none;
   }
 
+  /* Profile button style (replaces login after login) */
+  .profile-btn {
+    background: transparent;
+    color: #000;
+    border: 2px solid transparent;
+    padding: 0.5rem 1.4rem;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    margin-left: 0.4rem;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .profile-btn:hover,
+  .profile-btn:focus-visible {
+    background: #000;
+    color: white;
+    border-color: #000;
+    outline: none;
+  }
+
+  /* Login state management */
+  .before-login {
+    display: block;
+  }
+  .after-login {
+    display: none;
+  }
+  .logged-in .before-login {
+    display: none;
+  }
+  .logged-in .after-login {
+    display: block;
+  }
+  .logged-in .after-login.nav-item {
+    display: flex;
+  }
+
   /* Mega dropdown style */
   .dropdown {
     position: absolute;
@@ -270,6 +312,15 @@
       font-size: 1.15rem;
       margin-top: 0.5rem;
       border-radius: 28px;
+    }
+    .profile-btn {
+      width: 100%;
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 1.15rem;
+      margin-top: 0.5rem;
+      border-radius: 28px;
+      justify-content: center;
     }
   }
 
@@ -1982,25 +2033,25 @@
           </div>
         </li>
 
-        <!-- Navbar item 6: Profile -->
-        <li role="none">
-          <button class="nav-link" onclick="openProfileModal()" role="menuitem">
-            <span class="material-icons" style="font-size: 1rem; margin-right: 0.3rem; vertical-align: middle;">person</span>
-            Profile
-          </button>
-        </li>
-
-        <!-- Navbar item 7: About Us -->
+        <!-- Navbar item 6: About Us -->
         <li role="none">
           <a href="#" class="nav-link" role="menuitem">About Us</a>
         </li>
 
-        <!-- Navbar item 8: Login -->
-        <li role="none">
+        <!-- Navbar item 7: Login (before login) -->
+        <li role="none" class="before-login">
           <button class="login-btn" role="menuitem">Login</button>
         </li>
       </ul>
-      <button class="get-started-btn" role="link" tabindex="0">Let's Get Started</button>
+      
+      <!-- Before Login: Get Started Button -->
+      <button class="get-started-btn before-login" role="link" tabindex="0">Let's Get Started</button>
+      
+      <!-- After Login: Profile Button -->
+      <button class="profile-btn after-login" onclick="openProfileModal()" role="button">
+        <span class="material-icons" style="font-size: 1.2rem;">person</span>
+        Profile
+      </button>
     </div>
   </div>
 </header>
@@ -2367,6 +2418,10 @@
     <div class="modal-actions" id="modalActions">
       <button class="btn btn-secondary" onclick="closeProfileModal()">Cancel</button>
       <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+    </div>
+    <div class="modal-actions" id="viewModeActions" style="display: none;">
+      <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
+      <button class="btn btn-secondary" onclick="closeProfileModal()">Close</button>
     </div>
   </div>
 </div>
@@ -3215,6 +3270,7 @@
     document.getElementById('modalTitle').textContent = 'Profile Overview';
     document.getElementById('modeToggle').innerHTML = '<span class="material-icons">edit</span>Edit Profile';
     document.getElementById('modalActions').style.display = 'none';
+    document.getElementById('viewModeActions').style.display = 'flex';
     renderViewMode();
   }
 
@@ -3225,6 +3281,7 @@
     document.getElementById('modalTitle').textContent = 'Edit Profile';
     document.getElementById('modeToggle').innerHTML = '<span class="material-icons">visibility</span>View Profile';
     document.getElementById('modalActions').style.display = 'flex';
+    document.getElementById('viewModeActions').style.display = 'none';
   }
 
   // Check if profile has data
@@ -3591,6 +3648,110 @@
     switchToViewMode();
   }
 
+  // Login state management
+  let isLoggedIn = false;
+
+  function handleSuccessfulLogin() {
+    isLoggedIn = true;
+    document.body.classList.add('logged-in');
+    console.log('✅ User logged in successfully - Profile now available');
+    
+    // Close login modal if open
+    const loginBackdrop = document.getElementById('loginBackdrop');
+    if (loginBackdrop) {
+      loginBackdrop.classList.remove('show');
+    }
+    
+    // Show success message
+    showLoginSuccess();
+  }
+
+  function handleLogout() {
+    isLoggedIn = false;
+    document.body.classList.remove('logged-in');
+    console.log('👋 User logged out - Profile hidden');
+    
+    // Clear login state
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('currentUser');
+    
+    // Close profile modal if open
+    closeProfileModal();
+    
+    // Show logout message
+    const logoutMsg = document.createElement('div');
+    logoutMsg.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #dc3545;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      z-index: 2000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+    `;
+    logoutMsg.textContent = '👋 Logged out successfully!';
+    document.body.appendChild(logoutMsg);
+    
+    // Animate in
+    setTimeout(() => {
+      logoutMsg.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+      logoutMsg.style.transform = 'translateX(400px)';
+      setTimeout(() => {
+        if (logoutMsg.parentNode) {
+          logoutMsg.parentNode.removeChild(logoutMsg);
+        }
+      }, 300);
+    }, 3000);
+    
+    // Optional: Clear profile data on logout
+    // localStorage.removeItem('profileData'); // Uncomment if you want to clear profile on logout
+  }
+
+  function showLoginSuccess() {
+    // Create a temporary success message
+    const successMsg = document.createElement('div');
+    successMsg.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      z-index: 2000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+    `;
+    successMsg.textContent = '✅ Login successful! Profile is now available.';
+    document.body.appendChild(successMsg);
+    
+    // Animate in
+    setTimeout(() => {
+      successMsg.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 4 seconds
+    setTimeout(() => {
+      successMsg.style.transform = 'translateX(400px)';
+      setTimeout(() => {
+        if (successMsg.parentNode) {
+          successMsg.parentNode.removeChild(successMsg);
+        }
+      }, 300);
+    }, 4000);
+  }
+
   // Initialize profile system on page load
   document.addEventListener('DOMContentLoaded', function() {
     // Initialize timezone data when moment.js is loaded
@@ -3599,6 +3760,12 @@
       console.log('🌍 Timezone data initialized');
     } else {
       console.warn('⚠️ Moment.js timezone not loaded');
+    }
+    
+    // Check if user was previously logged in (optional)
+    const wasLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (wasLoggedIn) {
+      handleSuccessfulLogin();
     }
   });
 
@@ -3614,6 +3781,23 @@
       document.querySelectorAll('.timezone-dropdown').forEach(dd => dd.classList.remove('show'));
     }
   });
+
+  // Test login function for demonstration (remove in production)
+  function testLogin() {
+    console.log('🧪 Test login triggered');
+    handleSuccessfulLogin();
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('currentUser', JSON.stringify({
+      name: 'Test User',
+      role: 'Employee',
+      company: 'Demo Company',
+      id: 'test123'
+    }));
+  }
+
+  // Add test login to console for easy access
+  window.testLogin = testLogin;
+  console.log('🧪 Test login available: Run testLogin() in console to simulate login');
 
   // Console Commands for Database Access (for development/testing)
   window.OrbisDB = {
@@ -3969,9 +4153,17 @@
           console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
           console.log('👤 User details:', user);
           
-          // Show success message after loader completes
+          // Handle successful login state change
           setTimeout(() => {
-            alert(`🎉 Login successful! Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}`);
+            handleSuccessfulLogin();
+            // Store login state
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            // Show welcome message
+            setTimeout(() => {
+              alert(`🎉 Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}\n\n✨ Your profile is now available in the top navigation!`);
+            }, 1000);
           }, 500);
         }
       });
