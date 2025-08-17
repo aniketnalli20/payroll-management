@@ -319,6 +319,7 @@
       padding: 1rem 0;
       font-size: 1.15rem;
       margin-top: 0.5rem;
+      margin-left: 0 !important;
       border-radius: 28px;
       justify-content: center;
     }
@@ -2051,6 +2052,18 @@
       <button class="profile-btn after-login" onclick="openProfileModal()" role="button">
         <span class="material-icons" style="font-size: 1.2rem;">person</span>
         Profile
+      </button>
+      
+      <!-- Temporary Demo Profile Button (always visible for testing) -->
+      <button class="profile-btn" onclick="openProfileModal()" role="button" style="margin-left: 0.5rem; background: #007bff; color: white;">
+        <span class="material-icons" style="font-size: 1.2rem;">person</span>
+        Demo Profile
+      </button>
+      
+      <!-- Quick Login Button for Testing -->
+      <button class="profile-btn" onclick="testLogin()" role="button" style="margin-left: 0.5rem; background: #28a745; color: white;">
+        <span class="material-icons" style="font-size: 1.2rem;">login</span>
+        Quick Login
       </button>
     </div>
   </div>
