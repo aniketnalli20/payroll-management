@@ -46,8 +46,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    flex-wrap: nowrap;
-    position: relative;
+    flex-wrap: wrap;
   }
   .logo {
     font-weight: 800;
@@ -57,8 +56,6 @@
     user-select: none;
     cursor: pointer;
     pointer-events: auto;
-    flex-shrink: 0;
-    z-index: 10;
   }
   /* no hover/focus animation on logo */
   .nav {
@@ -132,29 +129,26 @@
     text-decoration: none;
   }
 
-  /* Login button style - matching get-started-btn */
+  /* Login button style */
   .login-btn {
-    background: #000;
-    color: white;
-    padding: 0.55rem 2.2rem;
-    border-radius: 24px;
-    font-weight: 700;
+    background: transparent;
+    color: #000;
+    border: 2px solid transparent;
+    padding: 0.5rem 1.4rem;
+    border-radius: 7px;
+    font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.15s ease-in-out;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
     margin-left: 0.4rem;
     white-space: nowrap;
   }
   .login-btn:hover,
   .login-btn:focus-visible {
-    background: #222;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    transform: scale(1.05);
-    outline-offset: 3px;
-    outline: 2px solid #666;
-    text-decoration: none;
+    background: #000;
+    color: white;
+    border-color: #000;
+    outline: none;
   }
 
   /* Mega dropdown style */
@@ -230,21 +224,11 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    flex-wrap: nowrap;
-    flex-shrink: 1;
-    min-width: 0;
+    flex-wrap: wrap;
   }
   @media (max-width: 1024px) {
-    .navbar-container {
-      flex-wrap: nowrap;
-      position: relative;
-    }
     .nav {
       display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
       width: 100%;
       flex-direction: column;
       gap: 0;
@@ -253,7 +237,6 @@
       box-shadow: 0 12px 30px rgba(0,0,0,0.12);
       margin-top: 0.3rem;
       padding: 1rem 0;
-      z-index: 1000;
     }
     .nav.show { display: flex; }
     .nav > li { width: 100%; }
@@ -276,50 +259,14 @@
     }
     .dropdown-section { margin-bottom: 1rem; }
     .dropdown a { padding-left: 0.5rem; }
-    .menu-toggle { 
-      display: block; 
-      margin-left: auto;
-      flex-shrink: 0;
-    }
-    .nav-and-cta {
-      flex-wrap: nowrap;
-      gap: 0.5rem;
-    }
+    .menu-toggle { display: block; margin-left: auto; }
     .get-started-btn {
-      padding: 0.5rem 1.5rem;
-      font-size: 0.9rem;
-      border-radius: 20px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .login-btn {
-      padding: 0.5rem 1.5rem;
-      font-size: 0.9rem;
-      border-radius: 20px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-  }
-
-  /* Additional mobile responsiveness for very small screens */
-  @media (max-width: 480px) {
-    .navbar-container {
-      padding: 0.5rem 1rem;
-      gap: 0.5rem;
-    }
-    .logo {
-      font-size: 1.3rem;
-    }
-    .nav-and-cta {
-      gap: 0.3rem;
-    }
-    .get-started-btn {
-      padding: 0.4rem 1.2rem;
-      font-size: 0.85rem;
-    }
-    .login-btn {
-      padding: 0.4rem 1.2rem;
-      font-size: 0.85rem;
+      width: 100%;
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 1.15rem;
+      margin-top: 0.5rem;
+      border-radius: 28px;
     }
   }
 
@@ -767,36 +714,36 @@
   }
   .login-submit-btn {
     width: 100%;
-    background: #000;
+    background: linear-gradient(90deg, #000 0%, #333 100%);
     color: #fff;
-    padding: 1rem 1.5rem;
+    padding: 0.8rem;
     font-weight: 700;
-    font-size: 1.05rem;
+    font-size: 0.9rem;
     border: none;
-    border-radius: 24px;
+    border-radius: 6px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
     margin-bottom: 0.8rem;
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.15s ease-in-out;
+    transition: background 0.19s, box-shadow 0.19s, transform 0.15s;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
   .login-submit-btn .material-icons {
-    font-size: 1.2rem !important;
+    font-size: 0.9rem !important;
   }
   .login-submit-btn:hover:not(:disabled), .login-submit-btn:focus-visible:not(:disabled) {
-    background: #222;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-    transform: scale(1.02);
+    background: linear-gradient(90deg, #111 10%, #000 90%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transform: translateY(-1px);
     outline: none;
   }
   .login-submit-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
-  .error-message, .attempt-warning {
+  .error-message, .attempt-warning, .success-message {
     padding: 0.6rem;
     border-radius: 6px;
     font-size: 0.75rem;
@@ -805,8 +752,8 @@
     align-items: center;
     gap: 0.4rem;
   }
-  .error-message .material-icons, .attempt-warning .material-icons {
-    font-size: 1rem !important;
+  .error-message .material-icons, .attempt-warning .material-icons, .success-message .material-icons {
+    font-size: 0.8rem !important;
   }
   .error-message {
     background: #fff5f5;
@@ -818,7 +765,12 @@
     border: 1px solid #f6ad55;
     color: #c05621;
   }
-  .error-message.show, .attempt-warning.show {
+  .success-message {
+    background: #f0fff4;
+    border: 1px solid #9ae6b4;
+    color: #2f855a;
+  }
+  .error-message.show, .attempt-warning.show, .success-message.show {
     display: flex;
   }
   .form-links {
@@ -851,27 +803,23 @@
   }
   .register-section {
     text-align: center;
-    padding: 1.2rem 0.5rem 0.5rem 0.5rem;
+    padding-top: 1rem;
     border-top: 1px solid #e9ecef;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
   }
   .register-text {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #666;
-    font-weight: 600;
-    margin: 0;
+    margin-bottom: 0.3rem;
   }
   .register-description {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #888;
-    line-height: 1.4;
-    margin: 0;
-    max-width: 280px;
-    text-align: center;
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
   }
   /* Terms Notice */
   .terms-notice {
@@ -889,6 +837,35 @@
     font-size: 0.8rem !important;
     margin-top: 0.1rem;
   }
+  /* Test Credentials Display */
+  .test-credentials {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.9);
+    color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    max-width: 250px;
+    z-index: 1003;
+    display: none;
+  }
+  .test-credentials.show {
+    display: block;
+  }
+  .test-credentials h4 {
+    margin: 0 0 0.5rem 0;
+    color: #ffd700;
+  }
+  .test-credentials .cred-section {
+    margin-bottom: 0.8rem;
+  }
+  .test-credentials .cred-title {
+    color: #87ceeb;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
   @media (max-width: 560px) {
     .login-card {
       padding: 1.5rem 1.5rem;
@@ -898,6 +875,9 @@
       flex-direction: column;
       align-items: center;
       gap: 0.4rem;
+    }
+    .test-credentials {
+      display: none !important;
     }
   }
 </style>
@@ -1066,6 +1046,21 @@
   </form>
 </div>
 
+<!-- Test Credentials Display -->
+<div class="test-credentials" id="testCredentials">
+  <h4>Test Credentials</h4>
+  <div class="cred-section">
+    <div class="cred-title">Employer (OrbiWave):</div>
+    <div>john.smith@techcorp.com</div>
+    <div>TechCorp@2024</div>
+  </div>
+  <div class="cred-section">
+    <div class="cred-title">Employee (OrbiFlex):</div>
+    <div>dev_alex_2024</div>
+    <div>DevCode@123</div>
+  </div>
+</div>
+
 <!-- Login Form Modal -->
 <div class="login-backdrop" id="loginBackdrop">
   <div class="login-card">
@@ -1099,6 +1094,10 @@
     <div class="attempt-warning" id="attemptWarning">
       <span class="material-icons">warning</span>
       <span>Account will be locked after 3 more failed attempts. Contact your system administrator if you need assistance.</span>
+    </div>
+    <div class="success-message" id="successMessage">
+      <span class="material-icons">check_circle</span>
+      <span></span>
     </div>
     <form id="loginForm">
       <div class="login-form-fields">
@@ -1338,19 +1337,34 @@
   const registerLink = document.getElementById('registerLink');
   const errorMessage = document.getElementById('errorMessage');
   const attemptWarning = document.getElementById('attemptWarning');
+  const successMessage = document.getElementById('successMessage');
   const passwordToggle = document.getElementById('passwordToggle');
   const passwordField = document.getElementById('loginPassword');
   const loginForm = document.getElementById('loginForm');
   const securityGuidelines = document.getElementById('securityGuidelines');
   const passwordGuidelines = document.getElementById('passwordGuidelines');
   const passwordRequirements = document.getElementById('passwordRequirements');
+  const testCredentials = document.getElementById('testCredentials');
 
   let currentLoginType = 'employer';
   let attemptCount = 0;
 
+  // Test credentials for validation
+  const validCredentials = {
+    employer: {
+      username: 'john.smith@techcorp.com',
+      password: 'TechCorp@2024'
+    },
+    employee: {
+      username: 'dev_alex_2024',
+      password: 'DevCode@123'
+    }
+  };
+
   // Open login modal when Login button is clicked
   loginBtn.addEventListener('click', () => {
     loginBackdrop.classList.add('show');
+    testCredentials.classList.add('show');
     // Reset form
     resetLoginForm();
     // Focus on first input
@@ -1360,6 +1374,7 @@
   // Close login modal
   function closeLoginModal() {
     loginBackdrop.classList.remove('show');
+    testCredentials.classList.remove('show');
     resetLoginForm();
   }
 
@@ -1368,6 +1383,7 @@
     passwordField.value = '';
     errorMessage.classList.remove('show');
     attemptWarning.classList.remove('show');
+    successMessage.classList.remove('show');
     attemptCount = 0;
     loginSubmitBtn.disabled = false;
     loginSubmitBtn.style.opacity = '1';
@@ -1456,9 +1472,15 @@
     }
   });
 
-  // Form submission with attempt tracking
+  // Form submission with attempt tracking and credential validation
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    
+    // Hide all messages first
+    errorMessage.classList.remove('show');
+    attemptWarning.classList.remove('show');
+    successMessage.classList.remove('show');
+    
     // Basic form validation
     if (!loginField.value.trim() || !passwordField.value.trim()) {
       errorMessage.querySelector('span:last-child').textContent = 'Please fill in all required fields.';
@@ -1466,11 +1488,7 @@
       return;
     }
 
-    attemptCount++;
-    if (attemptCount >= 2 && attemptCount < 5) {
-      attemptWarning.classList.add('show');
-    }
-
+    // Check if account is locked
     if (attemptCount >= 5) {
       errorMessage.querySelector('span:last-child').textContent = 'Account has been locked due to too many failed attempts. Please contact your system administrator.';
       errorMessage.classList.add('show');
@@ -1480,15 +1498,50 @@
       return;
     }
 
-    // Simulate login attempt (for demo purposes)
-    errorMessage.querySelector('span:last-child').textContent = 'Invalid Username or Password. Too many failed attempts will lock your account.';
-    errorMessage.classList.add('show');
+    // Validate credentials
+    const credentials = validCredentials[currentLoginType];
+    const isValidLogin = loginField.value.trim() === credentials.username && 
+                        passwordField.value.trim() === credentials.password;
+
+    if (isValidLogin) {
+      // Successful login
+      successMessage.querySelector('span:last-child').textContent = `Welcome! Redirecting to ${currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex'} dashboard...`;
+      successMessage.classList.add('show');
+      
+      // Simulate redirect after 2 seconds
+      setTimeout(() => {
+        alert(`Login successful! Welcome to ${currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex'} dashboard.`);
+        closeLoginModal();
+      }, 2000);
+      
+      // Reset attempt count on successful login
+      attemptCount = 0;
+    } else {
+      // Failed login
+      attemptCount++;
+      
+      if (attemptCount >= 2 && attemptCount < 5) {
+        attemptWarning.classList.add('show');
+      }
+      
+      if (attemptCount >= 5) {
+        errorMessage.querySelector('span:last-child').textContent = 'Account has been locked due to too many failed attempts. Please contact your system administrator.';
+        errorMessage.classList.add('show');
+        loginSubmitBtn.disabled = true;
+        loginSubmitBtn.style.opacity = '0.5';
+        loginSubmitBtn.style.cursor = 'not-allowed';
+      } else {
+        errorMessage.querySelector('span:last-child').textContent = 'Invalid Username or Password. Too many failed attempts will lock your account.';
+        errorMessage.classList.add('show');
+      }
+    }
     
-    // Here you would typically make an AJAX call to your login endpoint
     console.log(`Login attempt for ${currentLoginType}:`, {
       loginField: loginField.value,
-      password: passwordField.value,
-      loginType: currentLoginType
+      password: '***hidden***',
+      loginType: currentLoginType,
+      success: isValidLogin,
+      attemptCount: attemptCount
     });
   });
 
