@@ -154,31 +154,6 @@
     outline: none;
   }
 
-  /* Profile button style (replaces login after login) */
-  .profile-btn {
-    background: transparent;
-    color: #000;
-    border: 2px solid transparent;
-    padding: 0.5rem 1.4rem;
-    border-radius: 7px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-    margin-left: 0.4rem;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .profile-btn:hover,
-  .profile-btn:focus-visible {
-    background: #000;
-    color: white;
-    border-color: #000;
-    outline: none;
-  }
-
   /* Login state management */
   .before-login {
     display: block;
@@ -192,9 +167,8 @@
   .logged-in .after-login {
     display: block;
   }
-  .logged-in .after-login.nav-item {
-    display: flex;
-  }
+
+
 
   /* Mega dropdown style */
   .dropdown {
@@ -312,16 +286,6 @@
       font-size: 1.15rem;
       margin-top: 0.5rem;
       border-radius: 28px;
-    }
-    .profile-btn {
-      width: 100%;
-      text-align: center;
-      padding: 1rem 0;
-      font-size: 1.15rem;
-      margin-top: 0.5rem;
-      margin-left: 0 !important;
-      border-radius: 28px;
-      justify-content: center;
     }
   }
 
@@ -2043,28 +2007,18 @@
         <li role="none" class="before-login">
           <button class="login-btn" role="menuitem">Login</button>
         </li>
+
+        <!-- Navbar item 7: Profile (after login) -->
+        <li role="none" class="after-login" style="display: none;">
+          <button class="nav-link" onclick="openProfileModal()" role="menuitem">
+            <span class="material-icons" style="font-size: 1rem; margin-right: 0.3rem; vertical-align: middle;">person</span>
+            Profile
+          </button>
+        </li>
       </ul>
       
       <!-- Before Login: Get Started Button -->
       <button class="get-started-btn before-login" role="link" tabindex="0">Let's Get Started</button>
-      
-      <!-- After Login: Profile Button -->
-      <button class="profile-btn after-login" onclick="openProfileModal()" role="button">
-        <span class="material-icons" style="font-size: 1.2rem;">person</span>
-        Profile
-      </button>
-      
-      <!-- Temporary Demo Profile Button (always visible for testing) -->
-      <button class="profile-btn" onclick="openProfileModal()" role="button" style="margin-left: 0.5rem; background: #007bff; color: white;">
-        <span class="material-icons" style="font-size: 1.2rem;">person</span>
-        Demo Profile
-      </button>
-      
-      <!-- Quick Login Button for Testing -->
-      <button class="profile-btn" onclick="testLogin()" role="button" style="margin-left: 0.5rem; background: #28a745; color: white;">
-        <span class="material-icons" style="font-size: 1.2rem;">login</span>
-        Quick Login
-      </button>
     </div>
   </div>
 </header>
@@ -2305,8 +2259,54 @@
                 <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
               </div>
               <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="your.email@company.com">
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567">
+              </div>
+              <div class="form-group">
+                <label for="employeeId">Employee ID</label>
+                <input type="text" id="employeeId" name="employeeId" placeholder="EMP001">
+              </div>
+              <div class="form-group">
                 <label for="designation">Designation</label>
                 <input type="text" id="designation" name="designation" placeholder="Your job title">
+              </div>
+              <div class="form-group">
+                <label for="department">Department</label>
+                <input type="text" id="department" name="department" placeholder="Engineering, HR, Sales, etc.">
+              </div>
+            </div>
+          </div>
+
+          <!-- Employment Information -->
+          <div class="form-section">
+            <div class="section-title">
+              <span class="material-icons">work</span>
+              Employment Information
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="orgName">Organization</label>
+                <input type="text" id="orgName" name="orgName" placeholder="Company name">
+              </div>
+              <div class="form-group">
+                <label for="salary">Salary</label>
+                <input type="text" id="salary" name="salary" placeholder="$75,000 or ₹600,000">
+              </div>
+              <div class="form-group">
+                <label for="joiningDate">Joining Date</label>
+                <input type="date" id="joiningDate" name="joiningDate">
+              </div>
+              <div class="form-group">
+                <label for="workingSince">Working Since</label>
+                <input type="date" id="workingSince" name="workingSince">
+              </div>
+              <div class="form-group full-width">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" placeholder="Full address including city, state, country" rows="3"></textarea>
               </div>
             </div>
           </div>
@@ -2433,7 +2433,6 @@
       <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
     </div>
     <div class="modal-actions" id="viewModeActions" style="display: none;">
-      <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
       <button class="btn btn-secondary" onclick="closeProfileModal()">Close</button>
     </div>
   </div>
@@ -3201,11 +3200,18 @@
   let profileData = {
     photo: null,
     fullName: '',
+    email: '',
+    phone: '',
+    employeeId: '',
     designation: '',
+    department: '',
+    orgName: '',
+    salary: '',
+    joiningDate: '',
+    workingSince: '',
+    address: '',
     residenceTimezone: '',
     workTimezone: '',
-    orgName: '',
-    workingSince: '',
     skills: {
       technical: [],
       soft: [],
@@ -3649,9 +3655,36 @@
     profileData.orgName = document.getElementById('orgName').value;
     profileData.workingSince = document.getElementById('workingSince').value;
     profileData.degrees = document.getElementById('degrees').value;
+    profileData.email = document.getElementById('email').value;
+    profileData.phone = document.getElementById('phone').value;
+    profileData.employeeId = document.getElementById('employeeId').value;
+    profileData.department = document.getElementById('department').value;
+    profileData.salary = document.getElementById('salary').value;
+    profileData.joiningDate = document.getElementById('joiningDate').value;
+    profileData.address = document.getElementById('address').value;
     
     // Save to localStorage
     localStorage.setItem('profileData', JSON.stringify(profileData));
+    
+    // Update current user data if logged in
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    if (currentUser.id) {
+      // Update user data with profile information
+      const updatedUser = {
+        ...currentUser,
+        name: profileData.fullName,
+        email: profileData.email,
+        phone: profileData.phone,
+        designation: profileData.designation,
+        department: profileData.department,
+        company: profileData.orgName,
+        salary: profileData.salary,
+        joiningDate: profileData.joiningDate,
+        address: profileData.address
+      };
+      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+      console.log('👤 User data updated with profile information');
+    }
     
     // Show success message
     console.log('💾 Profile saved successfully!');
@@ -3675,6 +3708,9 @@
       loginBackdrop.classList.remove('show');
     }
     
+    // Pre-fill profile with login data
+    prefillProfileFromLogin();
+    
     // Show success message
     showLoginSuccess();
   }
@@ -3692,41 +3728,32 @@
     closeProfileModal();
     
     // Show logout message
-    const logoutMsg = document.createElement('div');
-    logoutMsg.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #dc3545;
-      color: white;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 600;
-      z-index: 2000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
-    `;
-    logoutMsg.textContent = '👋 Logged out successfully!';
-    document.body.appendChild(logoutMsg);
-    
-    // Animate in
-    setTimeout(() => {
-      logoutMsg.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-      logoutMsg.style.transform = 'translateX(400px)';
-      setTimeout(() => {
-        if (logoutMsg.parentNode) {
-          logoutMsg.parentNode.removeChild(logoutMsg);
-        }
-      }, 300);
-    }, 3000);
+    showLogoutMessage();
     
     // Optional: Clear profile data on logout
     // localStorage.removeItem('profileData'); // Uncomment if you want to clear profile on logout
+  }
+
+  function prefillProfileFromLogin() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    if (currentUser.id) {
+      // Pre-fill profile data with login information
+      profileData.fullName = currentUser.name || '';
+      profileData.email = currentUser.email || currentUser.loginId || '';
+      profileData.designation = currentUser.role || '';
+      profileData.orgName = currentUser.company || '';
+      profileData.department = currentUser.department || '';
+      profileData.employeeId = currentUser.id || '';
+      profileData.phone = currentUser.phone || '';
+      profileData.salary = currentUser.salary || '';
+      profileData.joiningDate = currentUser.joiningDate || '';
+      profileData.address = currentUser.address || '';
+      
+      // Save pre-filled data
+      localStorage.setItem('profileData', JSON.stringify(profileData));
+      
+      console.log('📋 Profile pre-filled with login data:', profileData);
+    }
   }
 
   function showLoginSuccess() {
@@ -3765,6 +3792,43 @@
     }, 4000);
   }
 
+  function showLogoutMessage() {
+    const logoutMsg = document.createElement('div');
+    logoutMsg.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #dc3545;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      z-index: 2000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+    `;
+    logoutMsg.textContent = '👋 Logged out successfully!';
+    document.body.appendChild(logoutMsg);
+    
+    // Animate in
+    setTimeout(() => {
+      logoutMsg.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+      logoutMsg.style.transform = 'translateX(400px)';
+      setTimeout(() => {
+        if (logoutMsg.parentNode) {
+          logoutMsg.parentNode.removeChild(logoutMsg);
+        }
+      }, 300);
+    }, 3000);
+  }
+
+
+
   // Initialize profile system on page load
   document.addEventListener('DOMContentLoaded', function() {
     // Initialize timezone data when moment.js is loaded
@@ -3773,12 +3837,6 @@
       console.log('🌍 Timezone data initialized');
     } else {
       console.warn('⚠️ Moment.js timezone not loaded');
-    }
-    
-    // Check if user was previously logged in (optional)
-    const wasLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (wasLoggedIn) {
-      handleSuccessfulLogin();
     }
   });
 
@@ -3795,22 +3853,7 @@
     }
   });
 
-  // Test login function for demonstration (remove in production)
-  function testLogin() {
-    console.log('🧪 Test login triggered');
-    handleSuccessfulLogin();
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('currentUser', JSON.stringify({
-      name: 'Test User',
-      role: 'Employee',
-      company: 'Demo Company',
-      id: 'test123'
-    }));
-  }
 
-  // Add test login to console for easy access
-  window.testLogin = testLogin;
-  console.log('🧪 Test login available: Run testLogin() in console to simulate login');
 
   // Console Commands for Database Access (for development/testing)
   window.OrbisDB = {
@@ -4166,17 +4209,9 @@
           console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
           console.log('👤 User details:', user);
           
-          // Handle successful login state change
+          // Show success message after loader completes
           setTimeout(() => {
-            handleSuccessfulLogin();
-            // Store login state
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            
-            // Show welcome message
-            setTimeout(() => {
-              alert(`🎉 Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}\n\n✨ Your profile is now available in the top navigation!`);
-            }, 1000);
+            alert(`🎉 Login successful! Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}`);
           }, 500);
         }
       });
