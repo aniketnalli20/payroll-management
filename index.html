@@ -1256,6 +1256,9 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
   }
+  .profile-modal .form-group.full-width {
+    grid-column: 1 / -1;
+  }
   .profile-modal .form-group {
     display: flex;
     flex-direction: column;
@@ -2173,9 +2176,34 @@
             <h3 id="viewFullName">John Doe</h3>
             <p id="viewDesignation">Software Developer</p>
             <p id="viewOrganization">TechCorp Solutions • Since 2020</p>
+            <p id="viewContactInfo">
+              <span id="viewEmail">email@company.com</span> • 
+              <span id="viewPhone">+1 (555) 123-4567</span>
+            </p>
           </div>
         </div>
         <div class="info-grid">
+          <div class="info-card">
+            <div class="info-card-title">
+              <span class="material-icons">badge</span>
+              Employment Details
+            </div>
+            <div class="info-card-content">
+              <div><strong>Employee ID:</strong> <span id="viewEmployeeId">Not specified</span></div>
+              <div><strong>Department:</strong> <span id="viewDepartment">Not specified</span></div>
+              <div><strong>Salary:</strong> <span id="viewSalary">Not specified</span></div>
+              <div><strong>Joining Date:</strong> <span id="viewJoiningDate">Not specified</span></div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-title">
+              <span class="material-icons">location_on</span>
+              Address
+            </div>
+            <div class="info-card-content">
+              <div id="viewAddress">No address provided</div>
+            </div>
+          </div>
           <div class="info-card">
             <div class="info-card-title">
               <span class="material-icons">schedule</span>
@@ -2349,23 +2377,7 @@
               </div>
             </div>
           </div>
-          <!-- Organization -->
-          <div class="form-section">
-            <div class="section-title">
-              <span class="material-icons">business</span>
-              Organization
-            </div>
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="orgName">Organization Name</label>
-                <input type="text" id="orgName" name="orgName" placeholder="Your company name">
-              </div>
-              <div class="form-group">
-                <label for="workingSince">Working Since</label>
-                <input type="date" id="workingSince" name="workingSince">
-              </div>
-            </div>
-          </div>
+
           <!-- Skills with Categories -->
           <div class="form-section">
             <div class="section-title">
@@ -2433,6 +2445,7 @@
       <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
     </div>
     <div class="modal-actions" id="viewModeActions" style="display: none;">
+      <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
       <button class="btn btn-secondary" onclick="closeProfileModal()">Close</button>
     </div>
   </div>
@@ -3551,6 +3564,20 @@
       'Organization not specified';
     document.getElementById('viewOrganization').textContent = orgText;
     
+    // Contact info
+    document.getElementById('viewEmail').textContent = profileData.email || 'No email provided';
+    document.getElementById('viewPhone').textContent = profileData.phone || 'No phone provided';
+    
+    // Employment details
+    document.getElementById('viewEmployeeId').textContent = profileData.employeeId || 'Not specified';
+    document.getElementById('viewDepartment').textContent = profileData.department || 'Not specified';
+    document.getElementById('viewSalary').textContent = profileData.salary || 'Not specified';
+    document.getElementById('viewJoiningDate').textContent = profileData.joiningDate ? 
+      new Date(profileData.joiningDate).toLocaleDateString() : 'Not specified';
+    
+    // Address
+    document.getElementById('viewAddress').textContent = profileData.address || 'No address provided';
+    
     // Timezones
     const residenceTz = profileData.residenceTimezone ? 
       timezoneList.find(t => t.name === profileData.residenceTimezone)?.displayName : 'Not specified';
@@ -3615,9 +3642,16 @@
     
     // Populate form fields
     document.getElementById('fullName').value = profileData.fullName || '';
+    document.getElementById('email').value = profileData.email || '';
+    document.getElementById('phone').value = profileData.phone || '';
+    document.getElementById('employeeId').value = profileData.employeeId || '';
     document.getElementById('designation').value = profileData.designation || '';
+    document.getElementById('department').value = profileData.department || '';
     document.getElementById('orgName').value = profileData.orgName || '';
+    document.getElementById('salary').value = profileData.salary || '';
+    document.getElementById('joiningDate').value = profileData.joiningDate || '';
     document.getElementById('workingSince').value = profileData.workingSince || '';
+    document.getElementById('address').value = profileData.address || '';
     document.getElementById('degrees').value = profileData.degrees || '';
     
     // Set timezone fields
@@ -3837,6 +3871,13 @@
       console.log('🌍 Timezone data initialized');
     } else {
       console.warn('⚠️ Moment.js timezone not loaded');
+    }
+    
+    // Check if user was previously logged in
+    const wasLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (wasLoggedIn) {
+      handleSuccessfulLogin();
+      console.log('🔄 Restored login state from previous session');
     }
   });
 
@@ -4209,9 +4250,17 @@
           console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
           console.log('👤 User details:', user);
           
-          // Show success message after loader completes
+          // Handle successful login state change
           setTimeout(() => {
-            alert(`🎉 Login successful! Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}`);
+            handleSuccessfulLogin();
+            // Store login state and user data
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            // Show welcome message
+            setTimeout(() => {
+              alert(`🎉 Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}\n\n✨ Your profile has been pre-filled and is now available!`);
+            }, 1000);
           }, 500);
         }
       });
