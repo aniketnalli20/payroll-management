@@ -1717,6 +1717,158 @@
   // Initialize database
   DatabaseManager.load();
 
+  // ========================================
+  // ENHANCED LOADER CONFIGURATION PARAMETERS
+  // ========================================
+  const loaderConfig = {
+    // Condition parameters - when to show loader
+    conditions: {
+      MIN_PROCESS_TIME: 1000,     // Minimum time to show loader (ms)
+      MAX_PROCESS_TIME: 5000,     // Maximum time for process (ms)
+      SHOW_ON_SUBMIT: true,       // Show on form submissions
+      SHOW_ON_AJAX: true,         // Show on AJAX requests
+      SHOW_ON_UPLOAD: true,       // Show on file uploads
+      SHOW_ON_LOGIN: true,        // Show on login attempts
+      AUTO_HIDE: true             // Auto-hide when complete
+    },
+    // Message sequences for different processes
+    messages: {
+      employerLogin: [
+        { message: "Authenticating employer...", submessage: "Verifying company credentials", duration: 1000, color: '#007bff' },
+        { message: "Connecting to OrbiWave...", submessage: "Loading employer dashboard", duration: 1500, color: '#28a745' },
+        { message: "Setting up workspace...", submessage: "Preparing your tools", duration: 1000, color: '#28a745' },
+        { message: "Welcome to OrbiWave!", submessage: "Redirecting to dashboard", duration: 800, color: '#28a745' }
+      ],
+      employeeLogin: [
+        { message: "Authenticating employee...", submessage: "Verifying user credentials", duration: 1000, color: '#007bff' },
+        { message: "Connecting to OrbiFlex...", submessage: "Loading employee portal", duration: 1500, color: '#17a2b8' },
+        { message: "Loading your profile...", submessage: "Getting your information", duration: 1000, color: '#17a2b8' },
+        { message: "Welcome to OrbiFlex!", submessage: "Redirecting to portal", duration: 800, color: '#17a2b8' }
+      ],
+      failedLogin: [
+        { message: "Authentication failed", submessage: "Invalid credentials provided", duration: 1200, color: '#dc3545' },
+        { message: "Please try again", submessage: "Check your login information", duration: 800, color: '#dc3545' }
+      ],
+      accountLocked: [
+        { message: "Security check...", submessage: "Verifying account status", duration: 1000, color: '#ffc107' },
+        { message: "Account locked", submessage: "Too many failed attempts", duration: 1500, color: '#dc3545' },
+        { message: "Contact administrator", submessage: "Account requires assistance", duration: 1000, color: '#dc3545' }
+      ],
+      formSubmission: [
+        { message: "Processing information...", submessage: "Validating your data", duration: 1000, color: '#007bff' },
+        { message: "Saving to database...", submessage: "Recording your submission", duration: 1500, color: '#28a745' },
+        { message: "Almost complete...", submessage: "Finalizing process", duration: 800, color: '#28a745' },
+        { message: "Success!", submessage: "Information saved successfully", duration: 700, color: '#28a745' }
+      ],
+      passwordReset: [
+        { message: "Processing request...", submessage: "Validating your information", duration: 1000, color: '#007bff' },
+        { message: "Generating reset link...", submessage: "Creating secure token", duration: 1500, color: '#17a2b8' },
+        { message: "Sending email...", submessage: "Delivering reset instructions", duration: 1200, color: '#28a745' },
+        { message: "Email sent!", submessage: "Check your inbox", duration: 800, color: '#28a745' }
+      ],
+      registration: [
+        { message: "Processing registration...", submessage: "Validating company information", duration: 1200, color: '#007bff' },
+        { message: "Creating account...", submessage: "Setting up your profile", duration: 1500, color: '#17a2b8' },
+        { message: "Sending confirmation...", submessage: "Preparing welcome email", duration: 1000, color: '#28a745' },
+        { message: "Registration complete!", submessage: "Welcome to Orbisyn", duration: 800, color: '#28a745' }
+      ]
+    }
+  };
+
+  // ========================================
+  // ENHANCED LOADER CONTROL FUNCTIONS
+  // ========================================
+  let currentLoaderProcess = null;
+  let loaderMessageTimeout = null;
+
+  // Main function to show loader with enhanced conditions
+  function showEnhancedLoader(processType, customMessages = null, callback = null) {
+    // Check conditions
+    if (!loaderConfig.conditions.SHOW_ON_LOGIN && processType.includes('Login')) return;
+    if (!loaderConfig.conditions.SHOW_ON_SUBMIT && processType === 'formSubmission') return;
+    
+    // Clear any existing process
+    if (currentLoaderProcess) {
+      clearTimeout(currentLoaderProcess);
+      clearTimeout(loaderMessageTimeout);
+    }
+    
+    // Get messages for this process type
+    const messages = customMessages || loaderConfig.messages[processType] || loaderConfig.messages.formSubmission;
+    
+    // Show loading state
+    showLoginLoader('authenticating');
+    
+    // Run enhanced message sequence
+    runEnhancedMessageSequence(messages, callback);
+  }
+
+  // Run through enhanced message sequence with colors
+  function runEnhancedMessageSequence(messages, callback) {
+    let messageIndex = 0;
+    
+    function showNextEnhancedMessage() {
+      if (messageIndex < messages.length) {
+        const { message, submessage, duration, color } = messages[messageIndex];
+        
+        // Update loader messages and color
+        loginLoadingMessage.textContent = message;
+        loginLoadingSubmessage.textContent = submessage;
+        document.documentElement.style.setProperty('--uib-color', color);
+        
+        messageIndex++;
+        
+        // Schedule next message
+        loaderMessageTimeout = setTimeout(showNextEnhancedMessage, duration);
+      } else {
+        // All messages complete
+        if (loaderConfig.conditions.AUTO_HIDE) {
+          setTimeout(() => {
+            hideLoginLoader();
+            if (callback) callback();
+          }, 500);
+        }
+      }
+    }
+    
+    // Start message sequence
+    showNextEnhancedMessage();
+  }
+
+  // Enhanced status update function
+  function updateEnhancedStatus(message, type = 'info') {
+    const colors = {
+      success: { bg: '#e8f5e8', border: '#c3e6cb', text: '#155724' },
+      error: { bg: '#f8d7da', border: '#f5c6cb', text: '#721c24' },
+      warning: { bg: '#fff3cd', border: '#ffeaa7', text: '#856404' },
+      info: { bg: '#d1ecf1', border: '#bee5eb', text: '#0c5460' }
+    };
+    
+    const color = colors[type] || colors.info;
+    console.log(`📊 Status Update [${type.toUpperCase()}]: ${message}`);
+  }
+
+  // Conditional loader based on user type and action
+  function showConditionalLoader(userType, action, additionalData = {}) {
+    let processType = '';
+    
+    if (action === 'login') {
+      processType = userType === 'employer' ? 'employerLogin' : 'employeeLogin';
+    } else if (action === 'failed_login') {
+      processType = 'failedLogin';
+    } else if (action === 'account_locked') {
+      processType = 'accountLocked';
+    } else if (action === 'form_submit') {
+      processType = 'formSubmission';
+    } else if (action === 'password_reset') {
+      processType = 'passwordReset';
+    } else if (action === 'registration') {
+      processType = 'registration';
+    }
+    
+    showEnhancedLoader(processType, null, additionalData.callback);
+  }
+
   // Console Commands for Database Access (for development/testing)
   window.OrbisDB = {
     // View all data
