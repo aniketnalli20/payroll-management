@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact Sales - Get Custom Pricing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  /* Paychex-inspired Color Palette */
+  --primary: #1f4788;
+  --primary-hover: #1a3d75;
+  --secondary: #0066cc;
+  --accent: #e8f4fd;
+  --success: #16a34a;
+  /* Neutral Colors */
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  /* Typography */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  /* Spacing */
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  /* Effects */
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-800);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+/* Main Container */
+.container {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+}
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+/* Contact Intro Section */
+.contact-intro {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--white) 100%);
+  padding: var(--space-12) var(--space-8);
+  text-align: center;
+}
+.intro-content h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: var(--space-6);
+  line-height: 1.3;
+}
+.phone-section { margin-bottom: var(--space-10); }
+.phone-number {
+  display: inline-block;
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  color: var(--primary);
+  text-decoration: none;
+  margin-bottom: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+  letter-spacing: 0.025em;
+}
+.phone-number:hover { background: var(--gray-100); transform: translateY(-2px); }
+.phone-subtitle { font-size: var(--font-size-sm); color: var(--gray-600); margin-bottom: var(--space-8); }
+.contact-btn {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: var(--space-4) var(--space-10);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 280px;
+  box-shadow: var(--shadow);
+}
+.contact-btn:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+/* Form Container */
+.form-container { display: none; padding: var(--space-8); }
+.form-container.active { display: block; animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+/* Form Header */
+.form-header { text-align: center; margin-bottom: var(--space-8); }
+.form-header h2 { font-size: var(--font-size-xl); font-weight: 700; color: var(--gray-900); margin-bottom: var(--space-3); }
+.form-header p { color: var(--gray-600); font-size: var(--font-size-base); }
+/* Progress Steps */
+.progress-container { margin-bottom: var(--space-10); position: relative; }
+.step-indicators { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); position: relative; z-index: 2; }
+.step-indicator { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.step-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: var(--font-size-sm); margin-bottom: var(--space-2);
+  transition: all 0.3s ease; border: 2px solid var(--gray-300); background: var(--white); color: var(--gray-500);
+}
+.step-indicator.active .step-circle { background: var(--primary); border-color: var(--primary); color: var(--white); }
+.step-indicator.completed .step-circle { background: var(--success); border-color: var(--success); color: var(--white); }
+.step-label { font-size: var(--font-size-xs); color: var(--gray-500); font-weight: 500; text-align: center; }
+.step-indicator.active .step-label { color: var(--primary); font-weight: 600; }
+/* Progress Bar */
+.progress-line { position: absolute; top: 18px; left: 50px; right: 50px; height: 2px; background: var(--gray-200); z-index: 1; }
+.progress-fill { height: 100%; background: var(--primary); transition: width 0.4s ease; border-radius: 1px; }
+/* Form Steps */
+.form-step { display: none; }
+.form-step.active { display: block; animation: slideIn 0.3s ease-out; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+/* Form Elements */
+.form-group { margin-bottom: var(--space-6); }
+.form-label { display: block; font-size: var(--font-size-sm); font-weight: 600; color: var(--gray-700); margin-bottom: var(--space-2); }
+.required::after { content: ' *'; color: #dc2626; }
+.form-input {
+  width: 100%; padding: var(--space-4); border: 2px solid var(--gray-200); border-radius: var(--radius);
+  font-size: var(--font-size-base); font-family: inherit; background: var(--white); color: var(--gray-800);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-input::placeholder { color: var(--gray-400); }
+.form-input:hover:not(:focus) { border-color: var(--gray-300); }
+.form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(31, 71, 136, 0.1); }
+/* Remove number input arrows */
+.form-input[type="number"]::-webkit-outer-spin-button,
+.form-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.form-input[type="number"] { -moz-appearance: textfield; }
+/* Form Navigation */
+.form-nav { display: flex; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-8); }
+.btn {
+  padding: var(--space-4) var(--space-6); border-radius: var(--radius); font-size: var(--font-size-base);
+  font-weight: 600; cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent; min-width: 120px;
+}
+.btn-primary { background: var(--primary); color: var(--white); }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); }
+.btn-secondary { background: transparent; color: var(--gray-600); border-color: var(--gray-300); }
+.btn-secondary:hover { background: var(--gray-50); border-color: var(--gray-400); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn-full { width: 100%; }
+/* Loading State */
+.btn.loading { position: relative; color: transparent; }
+.btn.loading::after {
+  content: ''; position: absolute; top: 50%; left: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+  border: 2px solid transparent; border-top: 2px solid currentColor; border-radius: 50%; animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+/* Privacy Notice */
+.privacy-notice { text-align: center; margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--gray-200); }
+.privacy-text { font-size: var(--font-size-sm); color: var(--gray-500); margin-bottom: var(--space-2); }
+.privacy-link { color: var(--primary); text-decoration: none; font-weight: 500; }
+.privacy-link:hover { text-decoration: underline; }
+/* Success Message */
+.success-message { text-align: center; padding: var(--space-10) var(--space-4); color: var(--success); font-size: var(--font-size-lg); font-weight: 600; display: none; }
+/* Responsive */
+@media (max-width: 640px) {
+  .container { margin: var(--space-4); }
+  .contact-intro, .form-container { padding: var(--space-6) var(--space-5); }
+  .phone-number { font-size: var(--font-size-2xl); }
+  .form-nav { flex-direction: column; }
+  .progress-line { left: 40px; right: 40px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- Initial Contact Screen -->
+  <div id="contactIntro" class="contact-intro">
+    <div class="intro-content">
+      <h1>Payroll, Time & Attendance, Benefits, and Insurance</h1>
+    </div>
+    <div class="phone-section">
+      <a href="tel:+919326807855" class="phone-number">9326807855</a>
+      <div class="phone-subtitle">Call us for immediate assistance</div>
+    </div>
+    <button class="contact-btn" onclick="showContactForm()">Contact Sales</button>
+  </div>
+
+  <!-- Contact Form -->
+  <div id="formContainer" class="form-container">
+    <div class="form-header">
+      <h2>Get Custom Pricing to Fit Your Needs</h2>
+      <p>Fill out the form below and we'll be in touch shortly.</p>
+    </div>
+    <!-- Progress Steps -->
+    <div class="progress-container">
+      <div class="step-indicators">
+        <div class="step-indicator active" id="stepIndicator1">
+          <div class="step-circle">1</div>
+          <div class="step-label">Step 1</div>
+        </div>
+        <div class="step-indicator" id="stepIndicator2">
+          <div class="step-circle">2</div>
+          <div class="step-label">Step 2</div>
+        </div>
+      </div>
+      <div class="progress-line">
+        <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="contactForm" onsubmit="submitForm(event)">
+      <!-- Step 1: Company Information -->
+      <div class="form-step active" id="step1">
+        <div class="form-group">
+          <label for="companyName" class="form-label required">Company Name</label>
+          <input type="text" id="companyName" name="companyName" class="form-input" placeholder="Enter your company name" required>
+        </div>
+        <div class="form-group">
+          <label for="employeeCount" class="form-label required">Number of Employees</label>
+          <input type="number" id="employeeCount" name="employeeCount" class="form-input" placeholder="e.g., 25, 100, 500" min="1" required>
+        </div>
+        <div class="form-nav">
+          <div></div>
+          <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Contact Information -->
+      <div class="form-step" id="step2">
+        <div class="form-group">
+          <label for="firstName" class="form-label required">First Name</label>
+          <input type="text" id="firstName" name="firstName" class="form-input" placeholder="Enter your first name" required>
+        </div>
+        <div class="form-group">
+          <label for="lastName" class="form-label required">Last Name</label>
+          <input type="text" id="lastName" name="lastName" class="form-input" placeholder="Enter your last name" required>
+        </div>
+        <div class="form-group">
+          <label for="email" class="form-label required">Email Address</label>
+          <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email address" required>
+        </div>
+        <div class="form-group">
+          <label for="phone" class="form-label required">Phone Number</label>
+          <input type="tel" id="phone" name="phone" class="form-input" placeholder="Enter your phone number" required>
+        </div>
+        <div class="form-group">
+          <label for="jobTitle" class="form-label">Job Title</label>
+          <input type="text" id="jobTitle" name="jobTitle" class="form-input" placeholder="Enter your job title (optional)">
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Submit Request</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message">
+      ✓ Thank you! Your request has been submitted.<br>
+      We'll be in touch shortly.
+    </div>
+
+    <!-- Privacy Notice -->
+    <div class="privacy-notice">
+      <div class="privacy-text">Your information is private and secure</div>
+      <a href="https://www.paychex.com/corporate/security/privacy" class="privacy-link" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const contactIntro = document.getElementById('contactIntro');
+  const formContainer = document.getElementById('formContainer');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const stepIndicator1 = document.getElementById('stepIndicator1');
+  const stepIndicator2 = document.getElementById('stepIndicator2');
+  const progressFill = document.getElementById('progressFill');
+  const submitBtn = document.getElementById('submitBtn');
+  const successMessage = document.getElementById('successMessage');
+
+  window.showContactForm = function() {
+    contactIntro.style.display = 'none';
+    formContainer.classList.add('active');
+    updateProgress(1);
+    // Move focus to the first field
+    const first = document.getElementById('companyName');
+    first && first.focus();
+  };
+
+  window.nextStep = function() {
+    // Validate step 1 fields
+    const companyName = document.getElementById('companyName');
+    const employeeCount = document.getElementById('employeeCount');
+    if (!companyName.checkValidity()) { companyName.reportValidity(); return; }
+    if (!employeeCount.checkValidity()) { employeeCount.reportValidity(); return; }
+
+    step1.classList.remove('active');
+    step2.classList.add('active');
+    updateProgress(2);
+    const firstName = document.getElementById('firstName');
+    firstName && firstName.focus();
+  };
+
+  window.prevStep = function() {
+    step2.classList.remove('active');
+    step1.classList.add('active');
+    updateProgress(1);
+    const companyName = document.getElementById('companyName');
+    companyName && companyName.focus();
+  };
+
+  window.submitForm = function(e) {
+    e.preventDefault();
+    // Validate step 2 fields
+    const requiredIds = ['firstName','lastName','email','phone'];
+    for (const id of requiredIds) {
+      const el = document.getElementById(id);
+      if (!el.checkValidity()) { el.reportValidity(); return; }
+    }
+
+    // Build payload
+    const payload = {
+      companyName: document.getElementById('companyName').value.trim(),
+      employeeCount: Number(document.getElementById('employeeCount').value),
+      firstName: document.getElementById('firstName').value.trim(),
+      lastName: document.getElementById('lastName').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      jobTitle: document.getElementById('jobTitle').value.trim()
+    };
+
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.classList.add('loading');
+
+    // TODO: Replace with real submission (fetch to API)
+    // Example:
+    // fetch('/api/contact-sales', {
+    //   method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    // }).then(res => {
+    //   if (!res.ok) throw new Error('Request failed');
+    //   return res.json();
+    // }).then(() => handleSuccess())
+    //   .catch(err => handleError(err))
+    //   .finally(() => { submitBtn.disabled = false; submitBtn.classList.remove('loading'); });
+
+    // Simulate async submit
+    setTimeout(() => {
+      console.log('Contact Sales submission:', payload);
+      handleSuccess();
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('loading');
+    }, 1200);
+  };
+
+  function handleSuccess() {
+    // Hide form, show success message
+    document.getElementById('contactForm').style.display = 'none';
+    successMessage.style.display = 'block';
+    updateProgress(2);
+  }
+
+  function updateProgress(step) {
+    if (step === 1) {
+      stepIndicator1.classList.add('active');
+      stepIndicator1.classList.remove('completed');
+      stepIndicator2.classList.remove('active', 'completed');
+      progressFill.style.width = '50%';
+    } else {
+      stepIndicator1.classList.remove('active');
+      stepIndicator1.classList.add('completed');
+      stepIndicator2.classList.add('active');
+      progressFill.style.width = '100%';
+    }
+  }
+})();
+</script>
+</body>
+</html>
