@@ -198,6 +198,26 @@ body {
 .privacy-link:hover { text-decoration: underline; }
 /* Success Message */
 .success-message { text-align: center; padding: var(--space-10) var(--space-4); color: var(--success); font-size: var(--font-size-lg); font-weight: 600; display: none; }
+/* Close (go home) button in top-right of card */
+.close-page-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-700);
+  font-size: 20px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+.close-page-btn:hover { background: var(--gray-50); color: var(--gray-900); box-shadow: var(--shadow); }
 /* Responsive */
 @media (max-width: 640px) {
   .container { margin: var(--space-4); }
@@ -210,6 +230,7 @@ body {
 </head>
 <body>
 <div class="container">
+  <button class="close-page-btn" type="button" aria-label="Close" onclick="goHome()">&times;</button>
   <!-- Initial Contact Screen -->
   <div id="contactIntro" class="contact-intro">
     <div class="intro-content">
@@ -398,6 +419,10 @@ body {
     document.getElementById('contactForm').style.display = 'none';
     successMessage.style.display = 'block';
     updateProgress(2);
+    // After short delay, go back to main page
+    setTimeout(() => {
+      goHome();
+    }, 2000);
   }
 
   function updateProgress(step) {
