@@ -339,6 +339,11 @@ body {
   const submitBtn = document.getElementById('submitBtn');
   const successMessage = document.getElementById('successMessage');
 
+  // Navigate back to main page
+  window.goHome = function() {
+    window.location.href = 'index.html';
+  };
+
   window.showContactForm = function() {
     contactIntro.style.display = 'none';
     formContainer.classList.add('active');
@@ -409,8 +414,7 @@ body {
     setTimeout(() => {
       console.log('Contact Sales submission:', payload);
       handleSuccess();
-      submitBtn.disabled = false;
-      submitBtn.classList.remove('loading');
+      // Keep disabled during redirect to avoid duplicate clicks
     }, 1200);
   };
 
