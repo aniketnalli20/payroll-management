@@ -408,13 +408,42 @@
     inset: 0;
     z-index: 1001;
     background: rgba(0,0,0,0.25);
-    backdrop-filter: blur(1.5px);
+    backdrop-filter: blur(2px);
     display: none;
     align-items: center;
     justify-content: center;
   }
+  body.modal-open { overflow: hidden; }
   .form-backdrop.show {
     display: flex;
+  }
+
+  /* Contact Sales iframe modal */
+  .contact-iframe-wrap {
+    background: rgba(255,255,255,0.98);
+    border-radius: 1.1em;
+    box-shadow: 0 12px 38px 0 rgba(0,0,0,0.15), 0 1.5px 6px rgba(0,0,0,0.08);
+    width: min(95vw, 540px);
+    height: min(90vh, 860px);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .contact-iframe {
+    border: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .contact-iframe-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.05);
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
   }
   .glass-card {
     background: rgba(255,255,255,0.98);
@@ -2110,7 +2139,7 @@
         <li role="none">
           <button class="nav-link" aria-haspopup="true" aria-expanded="false" aria-controls="dropdown-contact" role="menuitem">Contact</button>
           <div id="dropdown-contact" role="menu" class="dropdown">
-            <a href="contact-sales.html">Contact sales</a>
+            <a href="#" id="openContactSalesLink">Contact sales</a>
             <button class="nav-link" aria-haspopup="true" aria-expanded="false" aria-controls="dropdown-support" style="padding-left: 0;">Contact Support ▾</button>
             <div id="dropdown-support" role="menu" class="dropdown" style="left:100%;top:0;min-width:220px;max-width:240px;">
             </div>
@@ -2142,45 +2171,41 @@
         <span>Let’s Get Started</span>
         <span class="material-icons icon" aria-hidden="true">arrow_forward</span>
       </button>
+      <script>
+        // Hook the Get Started button to open the contact sales modal
+        (function(){
+          const getStartedBtn = document.getElementById('getStartedBtn');
+          const formBackdrop = document.getElementById('formBackdrop');
+          const contactCloseBtn = document.getElementById('contactCloseBtn');
+          const contactSalesLink = document.getElementById('openContactSalesLink');
+
+          function openContactModal(e) {
+            if (e) e.preventDefault();
+            formBackdrop.classList.add('show');
+            document.body.classList.add('modal-open');
+          }
+          function closeContactModal() {
+            formBackdrop.classList.remove('show');
+            document.body.classList.remove('modal-open');
+          }
+
+          if (getStartedBtn) getStartedBtn.addEventListener('click', openContactModal);
+          if (contactSalesLink) contactSalesLink.addEventListener('click', openContactModal);
+          if (contactCloseBtn) contactCloseBtn.addEventListener('click', closeContactModal);
+          // Close on backdrop click
+          if (formBackdrop) formBackdrop.addEventListener('click', (e)=>{ if (e.target === formBackdrop) closeContactModal(); });
+        })();
+      </script>
     </div>
   </div>
 </header>
 
-<!-- Multi-Step Form Modal -->
+<!-- Contact Sales Modal (iframe) -->
 <div class="form-backdrop" id="formBackdrop">
-  <form class="glass-card" autocomplete="off" onsubmit="return false;">
-    <button class="close-btn" type="button" aria-label="Close" id="formCloseBtn">&times;</button>
-    <h2 class="form-title">Get Custom Pricing to Fit Your Needs</h2>
-    <p class="form-description">3 Months of Free Payroll. Fill out the form below and we'll be in touch shortly.</p>
-    <div class="progress-container" aria-hidden="true">
-      <div class="progress-bar-wrapper">
-        <div class="progress-bar-fill" id="formProgressBarFill"></div>
-      </div>
-      <div class="progress-steps">
-        <div class="progress-step active" data-num="1">Step 1</div>
-        <div class="progress-step" data-num="2">Step 2</div>
-      </div>
-    </div>
-    <section class="step-content active" id="formStep1">
-      <div class="form-fields">
-        <div class="input-wrap">
-          <label for="formCompanyName" class="form-label">Company Name</label>
-          <input type="text" id="formCompanyName" class="form-input" placeholder="Your company name" autocomplete="organization"/>
-        </div>
-        <div class="input-wrap">
-          <label for="formNumEmployees" class="form-label">Number of Employees</label>
-          <input type="number" id="formNumEmployees" class="form-input" placeholder="Enter number" min="1" />
-        </div>
-      </div>
-      <button type="button" class="form-next-btn" id="formToStep2Btn" disabled>Next</button>
-    </section>
-    <section class="step-content" id="formStep2">
-      <p class="thank-you-text">
-        Thank you for submitting your info.<br />A representative will reach out shortly to help with your custom pricing.
-      </p>
-    </section>
-    <p class="privacy-note">Your information is private and secure</p>
-  </form>
+  <div class="contact-iframe-wrap" role="dialog" aria-modal="true" aria-label="Contact Sales">
+    <button class="contact-iframe-close" id="contactCloseBtn" aria-label="Close">Close</button>
+    <iframe src="contact-sales.html" class="contact-iframe" id="contactSalesFrame" title="Contact Sales"></iframe>
+  </div>
 </div>
 
 <!-- Tools Button -->
