@@ -4260,38 +4260,37 @@
       if (loginBackdrop) loginBackdrop.classList.remove('show');
       
       // Successful login - Use enhanced main screen loader
-      showConditionalLoader(currentLoginType, 'login', {
-        callback: () => {
-          // Record successful login
-          const loginId = DatabaseManager.recordLoginAttempt(currentLoginType, loginValue, true, user);
-          const platformName = currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex';
-          
-          // Reset attempt count
-          attemptCount = 0;
-          
-          DatabaseManager.log('security', `Successful login for ${user.name} (${user.role})`, {
-            loginId: loginId,
-            userId: user.id,
-            platform: platformName
-          });
-          
-          console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
-          console.log('👤 User details:', user);
-          
-          // Handle successful login state change
-          setTimeout(() => {
-            handleSuccessfulLogin();
-            // Store login state and user data
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            
-            // Show welcome message
-            setTimeout(() => {
-              alert(`🎉 Welcome to ${platformName} dashboard, ${user.name}!\n\n👤 Role: ${user.role}\n🏢 ${currentLoginType === 'employer' ? 'Company: ' + user.company : 'Department: ' + user.department}\n\n✨ Your profile has been pre-filled and is now available!`);
-            }, 1000);
-          }, 500);
-        }
-      });
+      if (loaderConfig.conditions.SHOW_ON_LOGIN) {
+        showConditionalLoader(currentLoginType, 'login', {
+          callback: onLoginComplete
+        });
+      } else {
+        // Skip loader if disabled
+        onLoginComplete();
+      }
+
+      function onLoginComplete() {
+        // Record successful login
+        const loginId = DatabaseManager.recordLoginAttempt(currentLoginType, loginValue, true, user);
+        const platformName = currentLoginType === 'employer' ? 'OrbiWave' : 'OrbiFlex';
+        
+        // Reset attempt count
+        attemptCount = 0;
+        
+        DatabaseManager.log('security', `Successful login for ${user.name} (${user.role})`, {
+          loginId: loginId,
+          userId: user.id,
+          platform: platformName
+        });
+        
+        console.log(`✅ Successfully logged in as ${user.role} on ${platformName}`);
+        
+        // Handle successful login state change immediately
+        handleSuccessfulLogin();
+        // Store login state and user data
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', JSON.stringify(user));
+      }
       
     } else {
       // Failed login - Record attempt first
@@ -4334,23 +4333,29 @@
     }
   });
 
-  // Utility functions for enhanced login
+  // Utility functions for enhanced login (guard against missing elements)
   function showError(message) {
     hideAllMessages();
-    errorMessage.querySelector('span:last-child').textContent = message;
-    errorMessage.classList.add('show');
+    if (errorMessage) {
+      const target = errorMessage.querySelector('span:last-child') || errorMessage;
+      target.textContent = message;
+      errorMessage.classList.add('show');
+    }
   }
 
   function showSuccess(message) {
     hideAllMessages();
-    successMessage.querySelector('span:last-child').textContent = message;
-    successMessage.classList.add('show');
+    if (successMessage) {
+      const target = successMessage.querySelector('span:last-child') || successMessage;
+      target.textContent = message;
+      successMessage.classList.add('show');
+    }
   }
 
   function hideAllMessages() {
-    errorMessage.classList.remove('show');
-    attemptWarning.classList.remove('show');
-    successMessage.classList.remove('show');
+    if (errorMessage) errorMessage.classList.remove('show');
+    if (attemptWarning) attemptWarning.classList.remove('show');
+    if (successMessage) successMessage.classList.remove('show');
   }
 
   function disableLoginButton() {
