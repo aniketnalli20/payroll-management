@@ -82,6 +82,66 @@
     transition: color 0.27s;
     background: transparent;
   }
+
+  /* Header avatar for logged-in state */
+  .nav-profile-btn {
+    padding: 0.3rem 0.6rem;
+  }
+  .header-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+    border: 2px solid transparent;
+  }
+  .header-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .header-avatar[data-role="employer"] { border-color: #28a745; }
+  .header-avatar[data-role="employee"] { border-color: #17a2b8; }
+
+  /* Remove underline for profile button and add gradient halo on hover */
+  .nav-profile-btn { position: relative; }
+  .nav-profile-btn::after { content: none !important; }
+  .nav-profile-btn:hover::after,
+  .nav-profile-btn:focus-visible::after { width: 0 !important; }
+  .nav-profile-btn .header-avatar { position: relative; z-index: 1; }
+  .nav-profile-btn .header-avatar::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      #ff6b6b,
+      #f06595,
+      #845ef7,
+      #339af0,
+      #22b8cf,
+      #20c997,
+      #94d82d,
+      #fcc419,
+      #ff6b6b
+    );
+    filter: blur(8px);
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: -1;
+  }
+  .nav-profile-btn:hover .header-avatar::before,
+  .nav-profile-btn:focus-visible .header-avatar::before {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
   .nav-link:hover,
   .nav-link:focus-visible,
   .nav > li > a:hover,
@@ -1049,7 +1109,9 @@
     overflow-y: auto;
     box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     position: relative;
+    scrollbar-width: none; /* Firefox: hide scrollbar visuals */
   }
+  .profile-modal .modal-content::-webkit-scrollbar { display: none; }
   .profile-modal .modal-header {
     padding: 2rem 2rem 1rem;
     border-bottom: 1px solid #e9ecef;
@@ -1318,7 +1380,9 @@
     overflow-y: auto;
     z-index: 100;
     display: none;
+    scrollbar-width: none;
   }
+  .profile-modal .timezone-dropdown::-webkit-scrollbar { display: none; }
   .profile-modal .timezone-dropdown.show {
     display: block;
   }
@@ -2013,9 +2077,10 @@
 
         <!-- Navbar item 7: Profile (after login) -->
         <li role="none" class="after-login" style="display: none;">
-          <button class="nav-link" onclick="openProfileModal()" role="menuitem">
-            <span class="material-icons" style="font-size: 1rem; margin-right: 0.3rem; vertical-align: middle;">person</span>
-            Profile
+          <button class="nav-link nav-profile-btn" onclick="openProfileModal()" role="menuitem" aria-label="Open profile">
+            <span class="header-avatar" id="headerAvatar">
+              <span class="material-icons">person</span>
+            </span>
           </button>
         </li>
       </ul>
@@ -3660,6 +3725,9 @@
     // Photo
     if (profileData.photo) {
       document.getElementById('viewProfileAvatar').innerHTML = `<img src="${profileData.photo}" alt="Profile">`;
+      // Also update header avatar promptly
+      const headerAvatar = document.getElementById('headerAvatar');
+      if (headerAvatar) headerAvatar.innerHTML = `<img src="${profileData.photo}" alt="Profile" />`;
     }
   }
 
@@ -3773,18 +3841,27 @@
   // Login state management
   let isLoggedIn = false;
 
-  // Update header buttons based on auth state
+  // Update header UI based on auth state, including avatar
   function updateAuthUI(loggedIn) {
     const befores = document.querySelectorAll('.before-login');
     const afters = document.querySelectorAll('.after-login');
     befores.forEach(el => el.style.display = loggedIn ? 'none' : '');
     afters.forEach(el => el.style.display = loggedIn ? 'block' : 'none');
 
-    // Update profile label per entity
-    const profileBtn = document.querySelector('.after-login .nav-link');
-    if (profileBtn) {
-      profileBtn.textContent = currentLoginType === 'employer' ? 'Employer Profile' : 'Employee Profile';
-      profileBtn.onclick = openProfileModal; // ensure handler
+    // Ensure profile button opens modal
+    const profileBtn = document.querySelector('.after-login .nav-profile-btn');
+    if (profileBtn) profileBtn.onclick = openProfileModal;
+
+    // Update header avatar image
+    const headerAvatar = document.getElementById('headerAvatar');
+    if (headerAvatar) {
+      const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const photo = (profileData && profileData.photo) ? profileData.photo : null;
+      headerAvatar.innerHTML = photo
+        ? `<img src="${photo}" alt="Profile" />`
+        : `<span class="material-icons">person</span>`;
+      // Add role-based ring color (optional)
+      headerAvatar.setAttribute('data-role', currentLoginType);
     }
   }
 
