@@ -308,19 +308,23 @@
   @media (max-width: 1024px) {
     .nav {
       display: none;
-      width: 100%;
+      position: fixed; /* fixed overlay menu */
+      left: 0; right: 0;
+      top: var(--mobile-nav-top, 0); /* JS sets this to header bottom */
+      bottom: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       flex-direction: column;
       gap: 0;
-      background: white;
-      border-radius: 0 0 10px 10px;
+      background: #fff;
       box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-      margin-top: 0.3rem;
-      padding: 1rem 0;
+      padding: 1rem 0 2rem;
+      z-index: 999; /* below header z-index 1000 */
     }
     .nav.show { display: flex; }
     .nav > li { width: 100%; }
     .nav-link, .nav > li > a {
-      padding: 1rem 2rem;
+      padding: 1rem 1.25rem;
       width: 100%;
       text-align: left;
       border-radius: 0;
@@ -331,7 +335,7 @@
       opacity: 1 !important;
       pointer-events: auto !important;
       max-height: none !important;
-      padding-left: 2rem;
+      padding-left: 1.25rem;
       margin-bottom: 0.5rem;
       box-shadow: none;
       border-radius: 0;
@@ -343,6 +347,7 @@
     /* Submenu inside dropdowns (e.g., Contact Support ▾) */
     .dropdown button[aria-controls] + .dropdown { display: none; }
     .dropdown button[aria-expanded="true"] + .dropdown { display: block; }
+
     .dropdown-section { margin-bottom: 1rem; }
     .dropdown a { padding-left: 0.5rem; }
     .menu-toggle { display: block; margin-left: auto; }
@@ -353,6 +358,13 @@
       font-size: 1.15rem;
       margin-top: 0.5rem;
       border-radius: 28px;
+    }
+
+    /* Lock body when menu open to avoid shifting */
+    body.nav-open {
+      position: fixed;
+      width: 100%;
+      overflow: hidden;
     }
   }
 
@@ -3311,6 +3323,15 @@
       e && (e.preventDefault(), e.stopPropagation());
       const isOpen = mainNav.classList.toggle('show');
       menuToggle.setAttribute('aria-expanded', String(isOpen));
+      // Compute fixed top for nav to sit under header
+      if (isOpen) {
+        const header = document.querySelector('.header');
+        const rect = header ? header.getBoundingClientRect() : { bottom: 0 };
+        document.documentElement.style.setProperty('--mobile-nav-top', `${rect.bottom}px`);
+        document.body.classList.add('nav-open');
+      } else {
+        document.body.classList.remove('nav-open');
+      }
     };
 
     ['click','touchend','pointerup'].forEach(evt => {
@@ -3351,6 +3372,7 @@
         if (!within) {
           mainNav.classList.remove('show');
           menuToggle.setAttribute('aria-expanded','false');
+          document.body.classList.remove('nav-open');
           // Also reset open states
           mainNav.querySelectorAll('li.open').forEach(x => x.classList.remove('open'));
           mainNav.querySelectorAll('button.nav-link[aria-expanded]')
@@ -3364,6 +3386,7 @@
       if (window.innerWidth > 1024 && mainNav.classList.contains('show')) {
         mainNav.classList.remove('show');
         menuToggle.setAttribute('aria-expanded','false');
+        document.body.classList.remove('nav-open');
         mainNav.querySelectorAll('li.open').forEach(x => x.classList.remove('open'));
         mainNav.querySelectorAll('button.nav-link[aria-expanded]')
           .forEach(b => b.setAttribute('aria-expanded','false'));
