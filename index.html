@@ -168,62 +168,28 @@
     width: 100%;
   }
 
-  /* Let’s Get Started button - Uiverse style applied */
-  .get-started-btn.button {
-    position: relative;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-    padding-block: 0.5rem;
-    padding-inline: 1.25rem;
-    background-color: var(--brand-primary, #000);
-    border-radius: 9999px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #fff;
-    gap: 10px;
+  /* Redesigned Let’s Get Started button */
+  .get-started-btn {
+    background: #000;
+    color: white;
+    padding: 0.55rem 2.2rem;
+    border-radius: 24px;
     font-weight: 700;
-    border: 3px solid #ffffff4d;
-    outline: none;
-    overflow: hidden;
-    font-size: 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.15s ease-in-out;
+    white-space: nowrap;
   }
-  .get-started-btn .icon {
-    width: 24px;
-    height: 24px;
-    transition: all 0.3s ease-in-out;
-    font-size: 20px;
-  }
-  .get-started-btn.button:hover {
+  .get-started-btn:hover,
+  .get-started-btn:focus-visible {
+    background: #222;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     transform: scale(1.05);
-    border-color: #fff9;
-  }
-  .get-started-btn.button:hover .icon {
-    transform: translate(4px);
-  }
-  .get-started-btn.button:hover::before {
-    animation: shine 1.5s ease-out infinite;
-  }
-  .get-started-btn.button::before {
-    content: "";
-    position: absolute;
-    width: 100px;
-    height: 100%;
-    background-image: linear-gradient(
-      120deg,
-      rgba(255, 255, 255, 0) 30%,
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0) 70%
-    );
-    top: 0;
-    left: -100px;
-    opacity: 0.6;
-  }
-  @keyframes shine {
-    0% { left: -100px; }
-    60% { left: 100%; }
-    100% { left: 100%; }
+    outline-offset: 3px;
+    outline: 2px solid #666;
+    text-decoration: none;
   }
 
   /* Login button style */
@@ -342,46 +308,34 @@
   @media (max-width: 1024px) {
     .nav {
       display: none;
-      position: fixed; /* fixed overlay menu */
-      left: 0; right: 0;
-      top: var(--mobile-nav-top, 0); /* JS sets this to header bottom */
-      bottom: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      width: 100%;
       flex-direction: column;
       gap: 0;
-      background: #fff;
+      background: white;
+      border-radius: 0 0 10px 10px;
       box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-      padding: 1rem 0 2rem;
-      z-index: 999; /* below header z-index 1000 */
+      margin-top: 0.3rem;
+      padding: 1rem 0;
     }
     .nav.show { display: flex; }
     .nav > li { width: 100%; }
     .nav-link, .nav > li > a {
-      padding: 1rem 1.25rem;
+      padding: 1rem 2rem;
       width: 100%;
       text-align: left;
       border-radius: 0;
     }
     .dropdown {
       position: static;
-      display: none; /* hide by default on mobile */
       opacity: 1 !important;
       pointer-events: auto !important;
       max-height: none !important;
-      padding-left: 1.25rem;
-      margin-bottom: 0.5rem;
+      padding-left: 2rem;
+      margin-bottom: 1rem;
       box-shadow: none;
       border-radius: 0;
       max-width: 100% !important;
     }
-    /* Show the chosen top-level menu */
-    .nav > li.open > .dropdown { display: block; }
-
-    /* Submenu inside dropdowns (e.g., Contact Support ▾) */
-    .dropdown button[aria-controls] + .dropdown { display: none; }
-    .dropdown button[aria-expanded="true"] + .dropdown { display: block; }
-
     .dropdown-section { margin-bottom: 1rem; }
     .dropdown a { padding-left: 0.5rem; }
     .menu-toggle { display: block; margin-left: auto; }
@@ -393,13 +347,6 @@
       margin-top: 0.5rem;
       border-radius: 28px;
     }
-
-    /* Lock body when menu open to avoid shifting */
-    body.nav-open {
-      position: fixed;
-      width: 100%;
-      overflow: hidden;
-    }
   }
 
   /* Multi-Step Form Modal Styles */
@@ -408,42 +355,13 @@
     inset: 0;
     z-index: 1001;
     background: rgba(0,0,0,0.25);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(1.5px);
     display: none;
     align-items: center;
     justify-content: center;
   }
-  body.modal-open { overflow: hidden; }
   .form-backdrop.show {
     display: flex;
-  }
-
-  /* Contact Sales iframe modal */
-  .contact-iframe-wrap {
-    background: rgba(255,255,255,0.98);
-    border-radius: 1.1em;
-    box-shadow: 0 12px 38px 0 rgba(0,0,0,0.15), 0 1.5px 6px rgba(0,0,0,0.08);
-    width: min(95vw, 540px);
-    height: min(90vh, 860px);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  .contact-iframe {
-    border: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .contact-iframe-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0,0,0,0.05);
-    border: none;
-    border-radius: 8px;
-    padding: 6px 10px;
-    cursor: pointer;
   }
   .glass-card {
     background: rgba(255,255,255,0.98);
@@ -2139,9 +2057,10 @@
         <li role="none">
           <button class="nav-link" aria-haspopup="true" aria-expanded="false" aria-controls="dropdown-contact" role="menuitem">Contact</button>
           <div id="dropdown-contact" role="menu" class="dropdown">
-            <a href="#" id="openContactSalesLink">Contact sales</a>
+            <a href="#">Contact sales</a>
             <button class="nav-link" aria-haspopup="true" aria-expanded="false" aria-controls="dropdown-support" style="padding-left: 0;">Contact Support ▾</button>
             <div id="dropdown-support" role="menu" class="dropdown" style="left:100%;top:0;min-width:220px;max-width:240px;">
+              <a href="#" style="padding-left:1rem;">All support options</a>
             </div>
           </div>
         </li>
@@ -2167,45 +2086,46 @@
       </ul>
       
       <!-- Before Login: Get Started Button -->
-      <button class="get-started-btn button before-login" id="getStartedBtn" type="button" aria-label="Get started">
-        <span>Let’s Get Started</span>
-        <span class="material-icons icon" aria-hidden="true">arrow_forward</span>
-      </button>
-      <script>
-        // Hook the Get Started button to open the contact sales modal
-        (function(){
-          const getStartedBtn = document.getElementById('getStartedBtn');
-          const formBackdrop = document.getElementById('formBackdrop');
-          const contactCloseBtn = document.getElementById('contactCloseBtn');
-          const contactSalesLink = document.getElementById('openContactSalesLink');
-
-          function openContactModal(e) {
-            if (e) e.preventDefault();
-            formBackdrop.classList.add('show');
-            document.body.classList.add('modal-open');
-          }
-          function closeContactModal() {
-            formBackdrop.classList.remove('show');
-            document.body.classList.remove('modal-open');
-          }
-
-          if (getStartedBtn) getStartedBtn.addEventListener('click', openContactModal);
-          if (contactSalesLink) contactSalesLink.addEventListener('click', openContactModal);
-          if (contactCloseBtn) contactCloseBtn.addEventListener('click', closeContactModal);
-          // Close on backdrop click
-          if (formBackdrop) formBackdrop.addEventListener('click', (e)=>{ if (e.target === formBackdrop) closeContactModal(); });
-        })();
-      </script>
+      <button class="get-started-btn before-login" role="link" tabindex="0">Let's Get Started</button>
     </div>
   </div>
 </header>
 
-<!-- Contact Sales Modal (iframe) -->
+<!-- Multi-Step Form Modal -->
 <div class="form-backdrop" id="formBackdrop">
-  <div class="contact-iframe-wrap" role="dialog" aria-modal="true" aria-label="Contact Sales">
-    <button class="contact-iframe-close" id="contactCloseBtn" aria-label="Close">Close</button>
-    <iframe src="contact-sales.html" class="contact-iframe" id="contactSalesFrame" title="Contact Sales"></iframe>
-  </div>
+  <form class="glass-card" autocomplete="off" onsubmit="return false;">
+    <button class="close-btn" type="button" aria-label="Close" id="formCloseBtn">&times;</button>
+    <h2 class="form-title">Get Custom Pricing to Fit Your Needs</h2>
+    <p class="form-description">3 Months of Free Payroll. Fill out the form below and we'll be in touch shortly.</p>
+    <div class="progress-container" aria-hidden="true">
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar-fill" id="formProgressBarFill"></div>
+      </div>
+      <div class="progress-steps">
+        <div class="progress-step active" data-num="1">Step 1</div>
+        <div class="progress-step" data-num="2">Step 2</div>
+      </div>
+    </div>
+    <section class="step-content active" id="formStep1">
+      <div class="form-fields">
+        <div class="input-wrap">
+          <label for="formCompanyName" class="form-label">Company Name</label>
+          <input type="text" id="formCompanyName" class="form-input" placeholder="Your company name" autocomplete="organization"/>
+        </div>
+        <div class="input-wrap">
+          <label for="formNumEmployees" class="form-label">Number of Employees</label>
+          <input type="number" id="formNumEmployees" class="form-input" placeholder="Enter number" min="1" />
+        </div>
+      </div>
+      <button type="button" class="form-next-btn" id="formToStep2Btn" disabled>Next</button>
+    </section>
+    <section class="step-content" id="formStep2">
+      <p class="thank-you-text">
+        Thank you for submitting your info.<br />A representative will reach out shortly to help with your custom pricing.
+      </p>
+    </section>
+    <p class="privacy-note">Your information is private and secure</p>
+  </form>
 </div>
 
 <!-- Tools Button -->
@@ -3375,87 +3295,6 @@
     }
   });
 
-  // Mobile hamburger menu toggles the same nav drawer
-  (function initMobileMenu() {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const mainNav = document.getElementById('mainNav');
-    if (!menuToggle || !mainNav) return;
-
-    const toggleNav = (e) => {
-      e && (e.preventDefault(), e.stopPropagation());
-      const isOpen = mainNav.classList.toggle('show');
-      menuToggle.setAttribute('aria-expanded', String(isOpen));
-      // Compute fixed top for nav to sit under header
-      if (isOpen) {
-        const header = document.querySelector('.header');
-        const rect = header ? header.getBoundingClientRect() : { bottom: 0 };
-        document.documentElement.style.setProperty('--mobile-nav-top', `${rect.bottom}px`);
-        document.body.classList.add('nav-open');
-      } else {
-        document.body.classList.remove('nav-open');
-      }
-    };
-
-    ['click','touchend','pointerup'].forEach(evt => {
-      menuToggle.addEventListener(evt, toggleNav, { passive: false });
-    });
-
-    // Mobile top-level: open one menu at a time
-    mainNav.addEventListener('click', (e) => {
-      const btn = e.target.closest('button.nav-link[aria-controls]');
-      if (btn && window.innerWidth <= 1024) {
-        e.preventDefault();
-        const li = btn.closest('li');
-        const alreadyOpen = li.classList.contains('open');
-        // Close all
-        mainNav.querySelectorAll('li.open').forEach(x => x.classList.remove('open'));
-        mainNav.querySelectorAll('button.nav-link[aria-expanded]')
-          .forEach(b => b.setAttribute('aria-expanded','false'));
-        // Toggle current
-        if (!alreadyOpen) {
-          li.classList.add('open');
-          btn.setAttribute('aria-expanded','true');
-        }
-      }
-
-      // Nested submenu toggles inside dropdowns (e.g., Contact Support ▾)
-      const nestedBtn = e.target.closest('.dropdown button[aria-controls]');
-      if (nestedBtn && window.innerWidth <= 1024) {
-        e.preventDefault();
-        const expanded = nestedBtn.getAttribute('aria-expanded') === 'true';
-        nestedBtn.setAttribute('aria-expanded', String(!expanded));
-      }
-    });
-
-    // Click outside closes whole nav
-    document.addEventListener('click', (e) => {
-      if (mainNav.classList.contains('show')) {
-        const within = mainNav.contains(e.target) || menuToggle.contains(e.target);
-        if (!within) {
-          mainNav.classList.remove('show');
-          menuToggle.setAttribute('aria-expanded','false');
-          document.body.classList.remove('nav-open');
-          // Also reset open states
-          mainNav.querySelectorAll('li.open').forEach(x => x.classList.remove('open'));
-          mainNav.querySelectorAll('button.nav-link[aria-expanded]')
-            .forEach(b => b.setAttribute('aria-expanded','false'));
-        }
-      }
-    });
-
-    // Close when resizing to desktop
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 1024 && mainNav.classList.contains('show')) {
-        mainNav.classList.remove('show');
-        menuToggle.setAttribute('aria-expanded','false');
-        document.body.classList.remove('nav-open');
-        mainNav.querySelectorAll('li.open').forEach(x => x.classList.remove('open'));
-        mainNav.querySelectorAll('button.nav-link[aria-expanded]')
-          .forEach(b => b.setAttribute('aria-expanded','false'));
-      }
-    });
-  })();
-
   // Login button opens login modal (ensure proper show/hide)
   if (loginBtn && loginBackdrop && loginCloseBtn) {
     const openLoginModal = (e) => {
@@ -3599,18 +3438,13 @@
       reader.onload = function(e) {
         const photoData = e.target.result;
         profileData.photo = photoData;
-        // Persist profile data immediately
-        try { localStorage.setItem('profileData', JSON.stringify(profileData)); } catch (e) { console.warn('Could not save profileData to storage', e); }
         // Update profile photo in modal
         const profilePhoto = document.getElementById('profilePhoto');
         profilePhoto.innerHTML = `<img src="${photoData}" alt="Profile Photo">`;
         // Update view mode avatar
         const viewAvatar = document.getElementById('viewProfileAvatar');
         viewAvatar.innerHTML = `<img src="${photoData}" alt="Profile">`;
-        // Update header avatar
-        const headerAvatar = document.getElementById('headerAvatar');
-        if (headerAvatar) headerAvatar.innerHTML = `<img src="${photoData}" alt="Profile" />`;
-        console.log('📷 Profile photo uploaded & saved');
+        console.log('📷 Profile photo uploaded');
       };
       reader.readAsDataURL(file);
     }
@@ -3914,15 +3748,6 @@
           ...(loadedData.skills || {})
         }
       };
-      // If we have a saved photo, reflect it in both the modal and header avatar
-      if (profileData.photo) {
-        const profilePhoto = document.getElementById('profilePhoto');
-        if (profilePhoto) profilePhoto.innerHTML = `<img src="${profileData.photo}" alt="Profile Photo">`;
-        const viewAvatar = document.getElementById('viewProfileAvatar');
-        if (viewAvatar) viewAvatar.innerHTML = `<img src="${profileData.photo}" alt="Profile">`;
-        const headerAvatar = document.getElementById('headerAvatar');
-        if (headerAvatar) headerAvatar.innerHTML = `<img src="${profileData.photo}" alt="Profile" />`;
-      }
     }
     
     // Populate form fields
