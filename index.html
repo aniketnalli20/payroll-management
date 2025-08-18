@@ -327,15 +327,22 @@
     }
     .dropdown {
       position: static;
+      display: none; /* hide by default on mobile */
       opacity: 1 !important;
       pointer-events: auto !important;
       max-height: none !important;
       padding-left: 2rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       box-shadow: none;
       border-radius: 0;
       max-width: 100% !important;
     }
+    /* Show the chosen top-level menu */
+    .nav > li.open > .dropdown { display: block; }
+
+    /* Submenu inside dropdowns (e.g., Contact Support ▾) */
+    .dropdown button[aria-controls] + .dropdown { display: none; }
+    .dropdown button[aria-expanded="true"] + .dropdown { display: block; }
     .dropdown-section { margin-bottom: 1rem; }
     .dropdown a { padding-left: 0.5rem; }
     .menu-toggle { display: block; margin-left: auto; }
@@ -3294,6 +3301,76 @@
       toggleToolsPanel();
     }
   });
+
+  // Mobile hamburger menu toggles the same nav drawer
+  (function initMobileMenu() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainNav = document.getElementById('mainNav');
+    if (!menuToggle || !mainNav) return;
+
+    const toggleNav = (e) => {
+      e && (e.preventDefault(), e.stopPropagation());
+      const isOpen = mainNav.classList.toggle('show');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    ['click','touchend','pointerup'].forEach(evt => {
+      menuToggle.addEventListener(evt, toggleNav, { passive: false });
+    });
+
+    // Mobile top-level: open one menu at a time
+    mainNav.addEventListener('click', (e) => {
+      const btn = e.target.closest('button.nav-link[aria-controls]');
+      if (btn && window.innerWidth <= 1024) {
+        e.preventDefault();
+        const li = btn.closest('li');
+        const alreadyOpen = li.classList.contains('open');
+        // Close all
+        mainNav.querySelectorAll('li.open').forEach(x => x.classList.remove('open'));
+        mainNav.querySelectorAll('button.nav-link[aria-expanded]')
+          .forEach(b => b.setAttribute('aria-expanded','false'));
+        // Toggle current
+        if (!alreadyOpen) {
+          li.classList.add('open');
+          btn.setAttribute('aria-expanded','true');
+        }
+      }
+
+      // Nested submenu toggles inside dropdowns (e.g., Contact Support ▾)
+      const nestedBtn = e.target.closest('.dropdown button[aria-controls]');
+      if (nestedBtn && window.innerWidth <= 1024) {
+        e.preventDefault();
+        const expanded = nestedBtn.getAttribute('aria-expanded') === 'true';
+        nestedBtn.setAttribute('aria-expanded', String(!expanded));
+      }
+    });
+
+    // Click outside closes whole nav
+    document.addEventListener('click', (e) => {
+      if (mainNav.classList.contains('show')) {
+        const within = mainNav.contains(e.target) || menuToggle.contains(e.target);
+        if (!within) {
+          mainNav.classList.remove('show');
+          menuToggle.setAttribute('aria-expanded','false');
+          // Also reset open states
+          mainNav.querySelectorAll('li.open').forEach(x => x.classList.remove('open'));
+          mainNav.querySelectorAll('button.nav-link[aria-expanded]')
+            .forEach(b => b.setAttribute('aria-expanded','false'));
+        }
+      }
+    });
+
+    // Close when resizing to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024 && mainNav.classList.contains('show')) {
+        mainNav.classList.remove('show');
+        menuToggle.setAttribute('aria-expanded','false');
+        mainNav.querySelectorAll('li.open').forEach(x => x.classList.remove('open'));
+        mainNav.querySelectorAll('button.nav-link[aria-expanded]')
+          .forEach(b => b.setAttribute('aria-expanded','false'));
+      }
+    });
+  })();
 
   // Login button opens login modal (ensure proper show/hide)
   if (loginBtn && loginBackdrop && loginCloseBtn) {
