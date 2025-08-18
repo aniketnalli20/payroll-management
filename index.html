@@ -3438,13 +3438,18 @@
       reader.onload = function(e) {
         const photoData = e.target.result;
         profileData.photo = photoData;
+        // Persist profile data immediately
+        try { localStorage.setItem('profileData', JSON.stringify(profileData)); } catch (e) { console.warn('Could not save profileData to storage', e); }
         // Update profile photo in modal
         const profilePhoto = document.getElementById('profilePhoto');
         profilePhoto.innerHTML = `<img src="${photoData}" alt="Profile Photo">`;
         // Update view mode avatar
         const viewAvatar = document.getElementById('viewProfileAvatar');
         viewAvatar.innerHTML = `<img src="${photoData}" alt="Profile">`;
-        console.log('📷 Profile photo uploaded');
+        // Update header avatar
+        const headerAvatar = document.getElementById('headerAvatar');
+        if (headerAvatar) headerAvatar.innerHTML = `<img src="${photoData}" alt="Profile" />`;
+        console.log('📷 Profile photo uploaded & saved');
       };
       reader.readAsDataURL(file);
     }
@@ -3748,6 +3753,15 @@
           ...(loadedData.skills || {})
         }
       };
+      // If we have a saved photo, reflect it in both the modal and header avatar
+      if (profileData.photo) {
+        const profilePhoto = document.getElementById('profilePhoto');
+        if (profilePhoto) profilePhoto.innerHTML = `<img src="${profileData.photo}" alt="Profile Photo">`;
+        const viewAvatar = document.getElementById('viewProfileAvatar');
+        if (viewAvatar) viewAvatar.innerHTML = `<img src="${profileData.photo}" alt="Profile">`;
+        const headerAvatar = document.getElementById('headerAvatar');
+        if (headerAvatar) headerAvatar.innerHTML = `<img src="${profileData.photo}" alt="Profile" />`;
+      }
     }
     
     // Populate form fields
