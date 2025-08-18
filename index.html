@@ -2813,6 +2813,12 @@
   const passwordRequirements = document.getElementById('passwordRequirements');
   const testCredentials = document.getElementById('testCredentials');
 
+  // Main loading overlay elements (fix undefined references)
+  const mainLoadingOverlay = document.getElementById('mainLoadingOverlay');
+  const mainLoadingMessage = document.getElementById('mainLoadingMessage');
+  const mainLoadingSubmessage = document.getElementById('mainLoadingSubmessage');
+  const mainLoadingProgressBar = document.getElementById('mainLoadingProgressBar');
+
   let currentLoginType = 'employer';
   let attemptCount = 0;
 
@@ -4195,7 +4201,7 @@
 
   // Legacy function for backward compatibility
   function showLoginLoader(type) {
-    showMainLoader(type);
+    showEnhancedLoader(type);
   }
 
   function hideLoginLoader() {
