@@ -2656,8 +2656,12 @@
   const formProgressBarFill = document.getElementById('formProgressBarFill');
   const formProgressSteps = document.querySelectorAll('.progress-step');
 
-  // Open form modal when "Let's Get Started" button is clicked
-  getStartedBtn.addEventListener('click', () => {
+  // Open form modal when "Let's Get Started" button is clicked (touch-friendly)
+  const openFormModal = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     formBackdrop.classList.add('show');
     // Reset form to step 1
     formStep1.classList.add('active');
@@ -2670,6 +2674,10 @@
     formNextBtn.disabled = true;
     // Focus on first input
     setTimeout(() => formCompanyNameInput.focus(), 100);
+  };
+
+  ['click', 'touchend', 'pointerup'].forEach(evt => {
+    getStartedBtn.addEventListener(evt, openFormModal, { passive: false });
   });
 
   // Close form modal
@@ -2679,11 +2687,17 @@
 
   formCloseBtn.addEventListener('click', closeFormModal);
 
-  // Close modal when clicking on backdrop
-  formBackdrop.addEventListener('click', (e) => {
-    if (e.target === formBackdrop) {
+  // Close modal when clicking on backdrop (support touch/pointer)
+  const backdropClickHandler = (e) => {
+    const target = e.target || e.srcElement;
+    if (target === formBackdrop) {
+      e.preventDefault();
+      e.stopPropagation();
       closeFormModal();
     }
+  };
+  ['click', 'touchend', 'pointerup'].forEach(evt => {
+    formBackdrop.addEventListener(evt, backdropClickHandler, { passive: false });
   });
 
   // Form progress and validation
@@ -2712,8 +2726,12 @@
   formCompanyNameInput.addEventListener('input', updateFormProgress);
   formNumEmployeesInput.addEventListener('input', updateFormProgress);
 
-  // Move to step 2 and record form submission with enhanced loading animation
-  formNextBtn.addEventListener('click', () => {
+  // Move to step 2 and record form submission with enhanced loading animation (touch-friendly)
+  const handleFormNext = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (formNextBtn.disabled) return;
     
     // Show processing state with mini loader
@@ -2760,6 +2778,9 @@
         }, 3000);
       }
     });
+  };
+  ['click', 'touchend', 'pointerup'].forEach(evt => {
+    formNextBtn.addEventListener(evt, handleFormNext, { passive: false });
   });
 
   // Initialize form progress
