@@ -3042,7 +3042,7 @@
   // Main function to show loader with enhanced conditions
   function showEnhancedLoader(processType, customMessages = null, callback = null) {
     // Check conditions
-    if (!loaderConfig.conditions.SHOW_ON_LOGIN && processType.includes('Login')) return;
+    if (!loaderConfig.conditions.SHOW_ON_LOGIN && /Login/i.test(processType)) return;
     if (!loaderConfig.conditions.SHOW_ON_SUBMIT && processType === 'formSubmission') return;
     
     // Clear any existing process
@@ -3055,7 +3055,7 @@
     const messages = customMessages || loaderConfig.messages[processType] || loaderConfig.messages.formSubmission;
     
     // Show main screen loading state
-    showMainLoader('authenticating');
+    showMainLoader(processType);
     
     // Run enhanced message sequence
     runEnhancedMessageSequence(messages, callback);
@@ -3235,6 +3235,27 @@
       toggleToolsPanel();
     }
   });
+
+  // Login button opens login modal (ensure proper show/hide)
+  if (loginBtn && loginBackdrop && loginCloseBtn) {
+    const openLoginModal = (e) => {
+      e && (e.preventDefault(), e.stopPropagation());
+      loginBackdrop.classList.add('show');
+      hideAllMessages();
+      resetLoginButton();
+    };
+    const closeLoginModal = (e) => {
+      e && (e.preventDefault(), e.stopPropagation());
+      loginBackdrop.classList.remove('show');
+    };
+    ['click','touchend','pointerup'].forEach(evt => {
+      loginBtn.addEventListener(evt, openLoginModal, { passive: false });
+      loginCloseBtn.addEventListener(evt, closeLoginModal, { passive: false });
+    });
+    loginBackdrop.addEventListener('click', (e) => {
+      if (e.target === loginBackdrop) closeLoginModal(e);
+    });
+  }
 
   // Profile Modal Functions
   let profileData = {
@@ -3764,16 +3785,13 @@
     console.log('✅ User logged in successfully - Profile now available');
     
     // Close login modal if open
-    const loginBackdrop = document.getElementById('loginBackdrop');
-    if (loginBackdrop) {
-      loginBackdrop.classList.remove('show');
-    }
+    if (loginBackdrop) loginBackdrop.classList.remove('show');
     
     // Pre-fill profile with login data
     prefillProfileFromLogin();
     
-    // Show success message
-    showLoginSuccess();
+    // Hide any warnings/errors and do not show success banner unnecessarily
+    hideAllMessages();
   }
 
   function handleLogout() {
@@ -4256,7 +4274,7 @@
     
     if (user) {
       // Close login modal first
-      closeLoginModal();
+      if (loginBackdrop) loginBackdrop.classList.remove('show');
       
       // Successful login - Use enhanced main screen loader
       showConditionalLoader(currentLoginType, 'login', {
