@@ -2813,12 +2813,6 @@
   const passwordRequirements = document.getElementById('passwordRequirements');
   const testCredentials = document.getElementById('testCredentials');
 
-  // Main loading overlay elements (fix undefined references)
-  const mainLoadingOverlay = document.getElementById('mainLoadingOverlay');
-  const mainLoadingMessage = document.getElementById('mainLoadingMessage');
-  const mainLoadingSubmessage = document.getElementById('mainLoadingSubmessage');
-  const mainLoadingProgressBar = document.getElementById('mainLoadingProgressBar');
-
   let currentLoginType = 'employer';
   let attemptCount = 0;
 
@@ -3921,7 +3915,10 @@
     // Check if user was previously logged in
     const wasLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     if (wasLoggedIn) {
-      handleSuccessfulLogin();
+      // Restore quietly without showing warnings/loaders
+      document.body.classList.add('logged-in');
+      hideAllMessages();
+      prefillProfileFromLogin();
       console.log('🔄 Restored login state from previous session');
     }
   });
@@ -4149,17 +4146,19 @@
     }
   }
 
-  // Password toggle functionality
-  passwordToggle.addEventListener('click', () => {
-    const icon = passwordToggle.querySelector('.material-icons');
-    if (passwordField.type === 'password') {
-      passwordField.type = 'text';
-      icon.textContent = 'visibility_off';
-    } else {
-      passwordField.type = 'password';
-      icon.textContent = 'visibility';
-    }
-  });
+  // Password toggle functionality (guard against missing elements)
+  if (passwordToggle && passwordField) {
+    passwordToggle.addEventListener('click', () => {
+      const icon = passwordToggle.querySelector('.material-icons');
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        if (icon) icon.textContent = 'visibility_off';
+      } else {
+        passwordField.type = 'password';
+        if (icon) icon.textContent = 'visibility';
+      }
+    });
+  }
 
   // Main Screen Loading Animation Controller
   const mainLoadingOverlay = document.getElementById('mainLoadingOverlay');
@@ -4250,27 +4249,11 @@
     const passwordValue = passwordField.value.trim();
     let user = null;
     
-    console.log('👥 Available users for', currentLoginType, ':', users);
-    
     if (currentLoginType === 'employer') {
-      user = users.find(u => {
-        const emailMatch = u.email.toLowerCase() === loginValue.toLowerCase();
-        const passwordMatch = u.password === passwordValue;
-        const statusMatch = u.status === 'active';
-        console.log(`🔍 Checking user ${u.email}: email=${emailMatch}, password=${passwordMatch}, status=${statusMatch}`);
-        return emailMatch && passwordMatch && statusMatch;
-      });
+      user = users.find(u => u.email.toLowerCase() === loginValue.toLowerCase() && u.password === passwordValue && u.status === 'active');
     } else {
-      user = users.find(u => {
-        const usernameMatch = u.username === loginValue;
-        const passwordMatch = u.password === passwordValue;
-        const statusMatch = u.status === 'active';
-        console.log(`🔍 Checking user ${u.username}: username=${usernameMatch}, password=${passwordMatch}, status=${statusMatch}`);
-        return usernameMatch && passwordMatch && statusMatch;
-      });
+      user = users.find(u => u.username === loginValue && u.password === passwordValue && u.status === 'active');
     }
-    
-    console.log('👤 Found user:', user);
     
     if (user) {
       // Close login modal first
@@ -4331,7 +4314,8 @@
         // Regular failed login
         showConditionalLoader(currentLoginType, 'failed_login', {
           callback: () => {
-            if (attemptCount >= 2 && attemptCount < 5) {
+            // Only show attempt warning from the 3rd failed attempt onwards
+            if (attemptCount >= 3 && attemptCount < 5) {
               attemptWarning.classList.add('show');
               DatabaseManager.log('security', `Multiple failed login attempts for ${loginValue}`, {
                 attemptCount: attemptCount,
