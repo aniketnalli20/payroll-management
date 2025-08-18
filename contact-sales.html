@@ -7,8 +7,8 @@
 <style>
 :root {
   /* Paychex-inspired Color Palette */
-  --primary: #1f4788;
-  --primary-hover: #1a3d75;
+  --primary: var(--brand-primary, #000);
+  --primary-hover: var(--brand-primary-hover, #111);
   --secondary: #0066cc;
   --accent: #e8f4fd;
   --success: #16a34a;
@@ -106,6 +106,8 @@ body {
 .phone-number:hover { background: var(--gray-100); transform: translateY(-2px); }
 .phone-subtitle { font-size: var(--font-size-sm); color: var(--gray-600); margin-bottom: var(--space-8); }
 .contact-btn {
+  --brand-primary: var(--brand-primary, #000);
+  --brand-primary-hover: var(--brand-primary-hover, #111);
   background: var(--primary);
   color: var(--white);
   border: none;
@@ -166,14 +168,19 @@ body {
 .form-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .form-input[type="number"] { -moz-appearance: textfield; }
 /* Form Navigation */
-.form-nav { display: flex; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-8); }
+.form-nav { display: flex; justify-content: flex-end; gap: var(--space-4); margin-top: var(--space-8); }
+/* Step 1: center the Next button */
+#step1 .form-nav { justify-content: center; }
+#step1 .form-nav > div:first-child { flex: 0; }
+/* On Step 2, place Back on the left and Submit on the right */
+#step2 .form-nav { justify-content: space-between; }
 .btn {
   padding: var(--space-4) var(--space-6); border-radius: var(--radius); font-size: var(--font-size-base);
   font-weight: 600; cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent; min-width: 120px;
 }
 .btn-primary { background: var(--primary); color: var(--white); }
 .btn-primary:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); }
-.btn-secondary { background: transparent; color: var(--gray-600); border-color: var(--gray-300); }
+.btn-secondary { background: transparent; color: var(--gray-700); border-color: var(--gray-300); }
 .btn-secondary:hover { background: var(--gray-50); border-color: var(--gray-400); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 .btn-full { width: 100%; }
