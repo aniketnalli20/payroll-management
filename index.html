@@ -3773,9 +3773,25 @@
   // Login state management
   let isLoggedIn = false;
 
+  // Update header buttons based on auth state
+  function updateAuthUI(loggedIn) {
+    const befores = document.querySelectorAll('.before-login');
+    const afters = document.querySelectorAll('.after-login');
+    befores.forEach(el => el.style.display = loggedIn ? 'none' : '');
+    afters.forEach(el => el.style.display = loggedIn ? 'block' : 'none');
+
+    // Update profile label per entity
+    const profileBtn = document.querySelector('.after-login .nav-link');
+    if (profileBtn) {
+      profileBtn.textContent = currentLoginType === 'employer' ? 'Employer Profile' : 'Employee Profile';
+      profileBtn.onclick = openProfileModal; // ensure handler
+    }
+  }
+
   function handleSuccessfulLogin() {
     isLoggedIn = true;
     document.body.classList.add('logged-in');
+    updateAuthUI(true);
     console.log('✅ User logged in successfully - Profile now available');
     
     // Close login modal if open
@@ -3791,6 +3807,7 @@
   function handleLogout() {
     isLoggedIn = false;
     document.body.classList.remove('logged-in');
+    updateAuthUI(false);
     console.log('👋 User logged out - Profile hidden');
     
     // Clear login state
@@ -3917,6 +3934,7 @@
     if (wasLoggedIn) {
       // Restore quietly without showing warnings/loaders
       document.body.classList.add('logged-in');
+      updateAuthUI(true);
       hideAllMessages();
       prefillProfileFromLogin();
       console.log('🔄 Restored login state from previous session');
