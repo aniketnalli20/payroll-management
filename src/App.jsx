@@ -35,6 +35,7 @@ function App() {
           <p>Streamline your HR & payroll operations with our comprehensive solution</p>
         </section>
       </main>
+    </>
   )
 }
 
