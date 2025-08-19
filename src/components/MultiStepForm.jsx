@@ -7,8 +7,6 @@ function MultiStepForm() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    company: '',
-    employees: '',
     phone: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,7 +15,7 @@ function MultiStepForm() {
 
   // Calculate progress based on current step
   useEffect(() => {
-    const progressPercentage = ((currentStep - 1) / 3) * 100;
+    const progressPercentage = ((currentStep - 1) / 2) * 100;
     setProgress(progressPercentage);
   }, [currentStep]);
 
@@ -26,6 +24,16 @@ function MultiStepForm() {
     setIsVisible(true);
     document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
   };
+  
+  // Listen for custom event to open form
+  useEffect(() => {
+    const handleOpenContactForm = () => openForm();
+    document.addEventListener('openContactForm', handleOpenContactForm);
+    
+    return () => {
+      document.removeEventListener('openContactForm', handleOpenContactForm);
+    };
+  }, []);
 
   // Function to close the form modal
   const closeForm = () => {
@@ -47,8 +55,6 @@ function MultiStepForm() {
     if (currentStep === 1) {
       return formData.name.trim() !== '' && formData.email.trim() !== '';
     } else if (currentStep === 2) {
-      return formData.company.trim() !== '' && formData.employees.trim() !== '';
-    } else if (currentStep === 3) {
       return formData.phone.trim() !== '';
     }
     return false;
@@ -56,7 +62,7 @@ function MultiStepForm() {
 
   // Handle next button click
   const handleNext = () => {
-    if (currentStep < 3) {
+    if (currentStep < 2) {
       setCurrentStep(currentStep + 1);
     } else {
       // Submit the form
@@ -80,8 +86,6 @@ function MultiStepForm() {
         setFormData({
           name: '',
           email: '',
-          company: '',
-          employees: '',
           phone: ''
         });
         setIsComplete(false);
@@ -91,9 +95,6 @@ function MultiStepForm() {
 
   return (
     <>
-      {/* Button to open the form (can be placed anywhere) */}
-      <button onClick={openForm} className="demo-btn">Open Contact Form</button>
-      
       {/* Form Modal */}
       <div className={`form-backdrop ${isVisible ? 'show' : ''}`}>
         <div className="glass-card">
@@ -105,10 +106,9 @@ function MultiStepForm() {
               <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
             </div>
             <div className="progress-steps">
-              <div className={`progress-step ${currentStep >= 1 ? 'active' : ''}`} data-num="1">Info</div>
-              <div className={`progress-step ${currentStep >= 2 ? 'active' : ''}`} data-num="2">Company</div>
-              <div className={`progress-step ${currentStep >= 3 ? 'active' : ''}`} data-num="3">Contact</div>
-            </div>
+            <div className={`progress-step ${currentStep >= 1 ? 'active' : ''}`} data-num="1">Info</div>
+            <div className={`progress-step ${currentStep >= 2 ? 'active' : ''}`} data-num="2">Contact</div>
+          </div>
           </div>
           
           {/* Step 1: Basic Info */}
@@ -147,44 +147,8 @@ function MultiStepForm() {
             </div>
           </div>
           
-          {/* Step 2: Company Info */}
+          {/* Step 2: Contact Info */}
           <div className={`step-content ${currentStep === 2 ? 'active' : ''}`}>
-            <h2 className="form-title">Company Details</h2>
-            <p className="form-description">Tell us about your business needs.</p>
-            
-            <div className="form-fields">
-              <div className="input-wrap">
-                <label htmlFor="company" className="form-label">Company Name</label>
-                <input 
-                  type="text" 
-                  id="company" 
-                  name="company" 
-                  className="form-input" 
-                  placeholder="Your company" 
-                  value={formData.company}
-                  onChange={handleInputChange}
-                  required 
-                />
-              </div>
-              
-              <div className="input-wrap">
-                <label htmlFor="employees" className="form-label">Number of Employees</label>
-                <input 
-                  type="text" 
-                  id="employees" 
-                  name="employees" 
-                  className="form-input" 
-                  placeholder="e.g. 1-50" 
-                  value={formData.employees}
-                  onChange={handleInputChange}
-                  required 
-                />
-              </div>
-            </div>
-          </div>
-          
-          {/* Step 3: Contact Info */}
-          <div className={`step-content ${currentStep === 3 ? 'active' : ''}`}>
             <h2 className="form-title">Contact Information</h2>
             <p className="form-description">How can our team reach you?</p>
             
@@ -223,7 +187,7 @@ function MultiStepForm() {
             >
               {isSubmitting ? (
                 <div className="chaotic-orbit" style={{ '--uib-color': '#fff', '--uib-size': '20px' }}></div>
-              ) : currentStep < 3 ? 'Continue' : 'Submit'}
+              ) : currentStep < 2 ? 'Continue' : 'Submit'}
             </button>
           )}
           

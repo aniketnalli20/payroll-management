@@ -28,7 +28,9 @@ function Navbar() {
 
   // Function to handle get started button click
   const handleGetStarted = () => {
-    window.location.href = '/contact-sales.html';
+    // Dispatch custom event to open contact form
+    const event = new CustomEvent('openContactForm');
+    document.dispatchEvent(event);
   };
 
   // Close dropdowns when clicking outside
@@ -231,7 +233,12 @@ function Navbar() {
                 role="menu" 
                 className={`dropdown ${activeDropdown === 'dropdown-contact' ? 'open' : ''}`}
               >
-                <a href="#">Contact sales</a>
+                <a href="#" onClick={(e) => {
+                  e.preventDefault();
+                  // Find and use the openForm function from MultiStepForm
+                  const event = new CustomEvent('openContactForm');
+                  document.dispatchEvent(event);
+                }}>Contact sales</a>
                 <button 
                   className="nav-link" 
                   aria-haspopup="true" 
