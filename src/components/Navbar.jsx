@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../index.css';
+import LoginModal from './LoginModal';
 
 function Navbar() {
   // State for managing dropdowns
@@ -23,7 +24,9 @@ function Navbar() {
 
   // Function to handle login button click
   const handleLogin = () => {
-    alert('Login functionality will be implemented soon!');
+    // Dispatch custom event to open login modal
+    const event = new CustomEvent('openLoginModal');
+    document.dispatchEvent(event);
   };
 
   // Function to handle get started button click
@@ -51,6 +54,26 @@ function Navbar() {
     
     return () => {
       document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  // Function to handle successful login
+  const handleLoginSuccess = (userData) => {
+    setIsLoggedIn(true);
+    console.log('User logged in:', userData);
+    // Here you would typically store user data in state or context
+  };
+
+  // Listen for login success event
+  useEffect(() => {
+    const handleLoginSuccessEvent = (event) => {
+      handleLoginSuccess(event.detail);
+    };
+    
+    document.addEventListener('loginSuccess', handleLoginSuccessEvent);
+    
+    return () => {
+      document.removeEventListener('loginSuccess', handleLoginSuccessEvent);
     };
   }, []);
 
@@ -293,6 +316,9 @@ function Navbar() {
           </button>
         </div>
       </div>
+      
+      {/* Include the LoginModal component */}
+      <LoginModal />
     </header>
   );
 }
