@@ -95,43 +95,7 @@ function Navbar() {
             role="menubar" 
             aria-label="Primary navigation"
           >
-            {/* HR & Payroll Dropdown */}
-            <li role="none">
-              <button 
-                className="nav-link" 
-                aria-haspopup="true" 
-                aria-expanded={activeDropdown === 'dropdown-hrpayroll'} 
-                aria-controls="dropdown-hrpayroll" 
-                role="menuitem" 
-                onClick={(e) => toggleDropdown('dropdown-hrpayroll', e)}
-              >
-                HR & Payroll
-              </button>
-              <div 
-                id="dropdown-hrpayroll" 
-                role="menu" 
-                className={`dropdown ${activeDropdown === 'dropdown-hrpayroll' ? 'open' : ''}`}
-              >
-                <div className="dropdown-section">
-                  <div className="dropdown-title">Payroll Services</div>
-                  <a href="#">Compare payroll plans</a>
-                  <a href="#">Small business payroll</a>
-                </div>
-                <div className="dropdown-section">
-                  <div className="dropdown-title">Human Resources</div>
-                  <a href="#">Compare HR plans</a>
-                  <a href="#">Professional employer organization</a>
-                  <a href="#">Human Resources overview</a>
-                </div>
-                <div className="dropdown-section">
-                  <div className="dropdown-title">Workforce Planning</div>
-                  <a href="#">Time n attendance</a>
-                  <a href="#">Time clocks n zones</a>
-                  <a href="#">HR analytics & reporting</a>
-                  <a href="#">Workforce planning overview</a>
-                </div>
-              </div>
-            </li>
+            {/* HR & Payroll dropdown removed */}
 
             {/* Employee Benefits Dropdown */}
             <li role="none">
