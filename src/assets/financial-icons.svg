@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <!-- Background with hexagon pattern -->
+  <defs>
+    <pattern id="hexagonPattern" patternUnits="userSpaceOnUse" width="100" height="100" patternTransform="scale(0.5)">
+      <path d="M50 0 L100 25 L100 75 L50 100 L0 75 L0 25 Z" fill="none" stroke="#e0e0e0" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="#f8f9fb"/>
+  <rect width="100%" height="100%" fill="url(#hexagonPattern)"/>
+  
+  <!-- Blurred background for depth -->
+  <rect width="100%" height="100%" fill="rgba(255,255,255,0.7)"/>
+  
+  <!-- Business person silhouette -->
+  <rect x="50" y="200" width="150" height="250" rx="5" fill="rgba(0,0,0,0.1)"/>
+  
+  <!-- Hexagon icons -->
+  <!-- Dollar sign hexagon -->
+  <path d="M400 150 L450 175 L450 225 L400 250 L350 225 L350 175 Z" fill="#e0e0e0" stroke="#d0d0d0"/>
+  <text x="400" y="215" font-family="Arial" font-size="40" text-anchor="middle" fill="#ffffff">$</text>
+  
+  <!-- House hexagon -->
+  <path d="M600 250 L650 275 L650 325 L600 350 L550 325 L550 275 Z" fill="#4a90e2" stroke="#3a80d2"/>
+  <path d="M600 290 L620 310 L600 330 L580 310 Z M590 330 L610 330 L610 340 L590 340 Z" fill="#ffffff"/>
+  
+  <!-- Chart hexagon -->
+  <path d="M400 350 L450 375 L450 425 L400 450 L350 425 L350 375 Z" fill="#e0e0e0" stroke="#d0d0d0"/>
+  <path d="M380 400 L380 420 L390 420 L390 400 Z M395 390 L395 420 L405 420 L405 390 Z M410 380 L410 420 L420 420 L420 380 Z" fill="#666666"/>
+  <path d="M370 380 L430 380 M370 400 L430 400 M370 420 L430 420" stroke="#666666" stroke-width="1" fill="none"/>
+  
+  <!-- Location pin hexagon -->
+  <path d="M200 250 L250 275 L250 325 L200 350 L150 325 L150 275 Z" fill="#e0e0e0" stroke="#d0d0d0"/>
+  <path d="M200 290 C210 290 220 300 220 310 C220 325 200 340 200 340 C200 340 180 325 180 310 C180 300 190 290 200 290 Z" fill="#ffffff"/>
+  <circle cx="200" cy="310" r="5" fill="#e0e0e0"/>
+  
+  <!-- Handshake hexagon -->
+  <path d="M200 450 L250 475 L250 525 L200 550 L150 525 L150 475 Z" fill="#e0e0e0" stroke="#d0d0d0"/>
+  <path d="M180 500 C185 495 190 495 195 500 L205 500 C210 495 215 495 220 500 C215 510 205 510 200 505 C195 510 185 510 180 500 Z" fill="#ffffff"/>
+  
+  <!-- Bank hexagon -->
+  <path d="M200 50 L250 75 L250 125 L200 150 L150 125 L150 75 Z" fill="#e0e0e0" stroke="#d0d0d0"/>
+  <path d="M200 80 L220 100 L180 100 Z M185 100 L185 120 L195 120 L195 100 Z M205 100 L205 120 L215 120 L215 100 Z M180 120 L220 120 L220 125 L180 125 Z" fill="#ffffff"/>
+  
+  <!-- Document hexagon -->
+  <path d="M600 450 L650 475 L650 525 L600 550 L550 525 L550 475 Z" fill="#e0e0e0" stroke="#d0d0d0"/>
+  <path d="M580 480 L620 480 L620 520 L580 520 Z" fill="#ffffff"/>
+  <path d="M590 490 L610 490 M590 500 L610 500 M590 510 L605 510" stroke="#d0d0d0" stroke-width="2"/>
+  
+  <!-- Search hexagon -->
+  <path d="M600 50 L650 75 L650 125 L600 150 L550 125 L550 75 Z" fill="#e0e0e0" stroke="#d0d0d0"/>
+  <circle cx="590" cy="100" r="15" fill="none" stroke="#ffffff" stroke-width="3"/>
+  <path d="M600 110 L615 125" stroke="#ffffff" stroke-width="3"/>
+  
+  <!-- Hand pointing -->
+  <path d="M500 300 C520 290 540 310 530 330 L520 350 C510 370 490 350 500 330 Z" fill="rgba(255,255,255,0.8)"/>
+</svg>
