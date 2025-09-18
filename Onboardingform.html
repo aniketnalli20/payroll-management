@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Employee Onboarding Form</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f7f9fc;
+    margin: 20px;
+  }
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+  form {
+    max-width: 800px;
+    background: #fff;
+    margin: auto;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  .section {
+    margin-bottom: 25px;
+  }
+  .section h3 {
+    border-bottom: 2px solid #0073e6;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    color: #0073e6;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="date"],
+  input[type="number"],
+  input[type="password"],
+  input[type="file"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  textarea {
+    resize: vertical;
+  }
+  .inline-label {
+    display: inline-block;
+    font-weight: normal;
+    margin-right: 20px;
+  }
+  .checkbox-group {
+    margin-top: 10px;
+  }
+  input[type="checkbox"] {
+    margin-right: 6px;
+  }
+  button {
+    display: block;
+    width: 100%;
+    background-color: #0073e6;
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #005bb5;
+  }
+  .error {
+    color: red;
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+
+<h2>Employee Onboarding Form</h2>
+<form id="onboardingForm" enctype="multipart/form-data" novalidate>
+  
+  <div class="section">
+    <h3>Personal Information</h3>
+    <label for="fullName">Full Name *</label>
+    <input type="text" id="fullName" name="fullName" required />
+    
+    <label for="dob">Date of Birth *</label>
+    <input type="date" id="dob" name="dob" required />
+    
+    <label>Gender *</label>
+    <label class="inline-label"><input type="radio" name="gender" value="Male" required /> Male</label>
+    <label class="inline-label"><input type="radio" name="gender" value="Female" /> Female</label>
+    <label class="inline-label"><input type="radio" name="gender" value="Other" /> Other</label>
+    
+    <label for="contactNumber">Contact Number *</label>
+    <input type="text" id="contactNumber" name="contactNumber" pattern="^\+?[\d\s\-]{7,15}$" placeholder="+1234567890" required />
+    
+    <label for="email">Email Address *</label>
+    <input type="email" id="email" name="email" required />
+    
+    <label for="address">Address *</label>
+    <textarea id="address" name="address" rows="3" required></textarea>
+    
+    <label for="emergencyContactName">Emergency Contact Name *</label>
+    <input type="text" id="emergencyContactName" name="emergencyContactName" required />
+    
+    <label for="emergencyContactNumber">Emergency Contact Number *</label>
+    <input type="text" id="emergencyContactNumber" name="emergencyContactNumber" pattern="^\+?[\d\s\-]{7,15}$" placeholder="+1234567890" required />
+  </div>
+
+  <div class="section">
+    <h3>Employment Details</h3>
+    <label for="employeeID">Employee ID</label>
+    <input type="text" id="employeeID" name="employeeID" />
+
+    <label for="department">Department *</label>
+    <input type="text" id="department" name="department" required />
+
+    <label for="designation">Designation / Job Title *</label>
+    <input type="text" id="designation" name="designation" required />
+
+    <label for="joiningDate">Joining Date *</label>
+    <input type="date" id="joiningDate" name="joiningDate" required />
+
+    <label for="managerName">Manager / Supervisor Name *</label>
+    <input type="text" id="managerName" name="managerName" required />
+
+    <label for="workLocation">Work Location *</label>
+    <select id="workLocation" name="workLocation" required>
+      <option value="">-- Select --</option>
+      <option value="Office">Office</option>
+      <option value="Remote">Remote</option>
+      <option value="Hybrid">Hybrid</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <h3>Government / Tax Details</h3>
+    <label for="panNumber">PAN / Tax Identification Number *</label>
+    <input type="text" id="panNumber" name="panNumber" required />
+
+    <label for="aadhaarNumber">Aadhaar / Social Security Number *</label>
+    <input type="text" id="aadhaarNumber" name="aadhaarNumber" required />
+
+    <label for="bankAccountNumber">Bank Account Number *</label>
+    <input type="text" id="bankAccountNumber" name="bankAccountNumber" required />
+
+    <label for="bankName">Bank Name & IFSC / SWIFT Code *</label>
+    <input type="text" id="bankName" name="bankName" required />
+  </div>
+
+  <div class="section">
+    <h3>Payroll Preferences</h3>
+    <label for="paymentCycle">Preferred Payment Cycle *</label>
+    <select id="paymentCycle" name="paymentCycle" required>
+      <option value="">-- Select --</option>
+      <option value="Monthly">Monthly</option>
+      <option value="Bi-weekly">Bi-weekly</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="paymentMode">Mode of Payment *</label>
+    <select id="paymentMode" name="paymentMode" required>
+      <option value="">-- Select --</option>
+      <option value="Direct Deposit">Direct Deposit</option>
+      <option value="Cheque">Cheque</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <h3>Benefits Selection</h3>
+    <label class="checkbox-group">
+      <input type="checkbox" id="healthInsurance" name="benefits" value="Health Insurance" /> Health Insurance Opt-In
+    </label>
+    <label class="checkbox-group">
+      <input type="checkbox" id="providentFund" name="benefits" value="Provident Fund" /> Provident Fund / Retirement Plan Enrollment
+    </label>
+    <label class="checkbox-group">
+      <input type="checkbox" id="gratuity" name="benefits" value="Gratuity" /> Gratuity (Yes)
+    </label>
+  </div>
+
+  <div class="section">
+    <h3>Upload Documents</h3>
+    <label for="resume">Resume / CV *</label>
+    <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required />
+
+    <label for="offerLetter">Offer Letter Acceptance *</label>
+    <input type="file" id="offerLetter" name="offerLetter" accept=".pdf,.doc,.docx" required />
+
+    <label for="photoId">Photo ID Proof *</label>
+    <input type="file" id="photoId" name="photoId" accept="image/*,.pdf" required />
+
+    <label for="addressProof">Address Proof *</label>
+    <input type="file" id="addressProof" name="addressProof" accept="image/*,.pdf" required />
+
+    <label for="educationCerts">Educational Certificates *</label>
+    <input type="file" id="educationCerts" name="educationCerts" accept=".pdf,.doc,.docx" multiple required />
+
+    <label for="relievingLetter">Previous Employer's Relieving Letter</label>
+    <input type="file" id="relievingLetter" name="relievingLetter" accept=".pdf,.doc,.docx" />
+  </div>
+
+  <div class="section">
+    <h3>Account & System Access</h3>
+    <label for="username">Preferred Username</label>
+    <input type="text" id="username" name="username" />
+
+    <label for="tempPassword">Temporary Password</label>
+    <input type="password" id="tempPassword" name="tempPassword" />
+  </div>
+
+  <div class="section">
+    <h3>Declarations & Consents</h3>
+    <label><input type="checkbox" id="certify" name="certify" required /> I certify that all information provided is true and accurate.</label><br />
+    <label><input type="checkbox" id="consent" name="consent" required /> I consent to the processing of provided data for employment and payroll purposes.</label><br />
+    <label for="signature">Signature *</label>
+    <input type="text" id="signature" name="signature" placeholder="Full name as signature" required />
+    <label for="date">Date *</label>
+    <input type="date" id="date" name="date" required />
+  </div>
+
+  <button type="submit">Submit Onboarding Form</button>
+</form>
+
+<script>
+document.getElementById('onboardingForm').addEventListener('submit', function(event) {
+  // Basic validation example
+  let form = event.target;
+  if (!form.checkValidity()) {
+    event.preventDefault();
+    alert('Please fill in all required fields correctly.');
+    return false;
+  }
+});
+</script>
+
+</body>
+</html>
